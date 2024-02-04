@@ -1,0 +1,64 @@
+<div class="  nav-jona">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg  navbar-dark " style="background-color: #086f97;">
+        <div class="container">
+ 
+            <!-- logo -->
+            <div (click)="redirectToPantallaCarga() " style="cursor: pointer;">
+                <img src="../../../assets/img/logo.svg" alt="" style="height: 50px;" class="me-3">
+                <a class="navbar-brand">Asciende Guardia</a>
+            </div>
+            <!-- botones -->
+            <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- sidebar -->
+            <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <!-- sideBar Header -->
+                <div class="offcanvas-header text-white border-bottom">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Asciende Guardia</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <!-- Sidebar body -->
+                <div class="offcanvas-body d-flex flexcolumn- flex-lg-row p-4 p-lg-0">
+                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                        @for (item of menuItems; track $index) {
+                        <li class="nav-item mx-2" style="cursor: pointer;">
+                            <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">
+                                {{item.title}}</a>
+                        </li>
+                        }
+                    </ul>
+                    <!-- login / cerrar secion -->
+                    <div class="dropdown .dropdown-menu text-end ">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../../../assets/img/Perfil.png" alt="mdo" width="45" height=auto
+                                class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small ">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Configuraciones</a></li>
+                            <li><a class="dropdown-item" href="#">Acerca de</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li (click)="logOut()" style="cursor: pointer;">
+                                <a class="dropdown-item"  >cerrar sesión</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-3">
+                        <a routerLink="/login" class="text-white text-decoration-none">login</a>
+                        <a (click)="logOut()" class="text-white text-decoration-none px-3 py-1 rounded-4"
+                            style="background-color: rgb(216, 76, 34); cursor: pointer;">Cerrar seción</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

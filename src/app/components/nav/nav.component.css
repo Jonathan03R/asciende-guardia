@@ -1,0 +1,35 @@
+.dropdown-toggle:not(:focus) {
+  outline: 0;
+}
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.dropdown-menu.text-small {
+  animation: fadeIn 0.5s;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    background-color: rgb(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+  }
+
+  .offcanvas-body {
+    align-items: flex-start;
+}
+
+  .dropdown-menu {
+    left: 0;
+    top: auto;
+    bottom: 100%;
+  }
+  
+  
+  
+}

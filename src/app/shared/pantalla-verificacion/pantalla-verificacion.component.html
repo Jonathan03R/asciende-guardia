@@ -1,0 +1,22 @@
+@if (spinner) {
+    <div class=" container-fluid bg-dark text-white d-flex flex-column justify-content-center align-items-center" style="height: 100vh;" >
+        <div class="cards card text-center mb-3">
+            
+                <div class="card-body text-white d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="card-title mt-4">Verificación de cuenta</h5>
+                    <p class="card-text">Hemos enviado un correo para que puedas verificar tu cuenta. Por favor, revisa tu bandeja de entrada y sigue las instrucciones proporcionadas en el correo.
+                    </p>
+                    <a (click)="redireccionar()" class="btn text-white  btn-gradient mt-auto">Continuar</a>
+                </div>
+           
+        </div>
+        <div class="  w-100 mb-5px">
+            <img src="../../../assets/img/buo de verificación.png" alt="" style="max-width: 200px;">
+    
+        </div>
+    </div>
+}@else {
+    <app-spinner></app-spinner>
+}
+
+

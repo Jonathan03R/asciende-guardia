@@ -1,0 +1,37 @@
+
+.btn-gradient {
+    width: 200px;
+    background: linear-gradient(to right, #00A651, #8DC63F);
+    border-radius: 10px;
+    color: #fff; 
+    padding: 10px 20px; 
+    border: none;
+    cursor: pointer;
+    
+    
+
+    
+
+}
+
+.btn-gradient:hover {
+    
+    background: linear-gradient(to right, #8DC63F, #00A651);
+} 
+
+.cards {
+    width: 300px;
+    height: 360px;
+    background-color: #212121;
+    box-shadow: 15px 15px 30px #191919,
+                 -15px -15px 30px #292929;
+    transition: border-radius cubic-bezier(0.075, 0.82, 0.165, 1) 1s,
+                 transform cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+   }
+   
+   .cards:hover {
+    border-bottom-right-radius: 50px;
+    border-top-left-radius: 50px;
+    transform: scale(1.05);
+   }
+   

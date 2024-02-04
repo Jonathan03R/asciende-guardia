@@ -1,0 +1,147 @@
+@if (!spinner) {
+  <div class="login-container" [ngClass]="{'sign-up-mode': isSignUpMode}">
+
+  <div class="forms-container">
+    <div class="signin-signup">
+      <!-- formulario inicio de sesion   -->
+      <form (ngSubmit)="logearse()" [formGroup]="formLogin" class="sign-in-form">
+        <h2 class="title">Iniciar sesión</h2>
+        <!-- aqui se ingresa el correo  -->
+        <div class="input-field form-control">
+          <i class="fas fa-envelope"></i>
+          <input type="Email" formControlName="emailLogin" placeholder="Email" autocomplete="email" />
+        </div>
+        <!-- aqui la contraseña  -->
+        <div class="input-field form-control">
+          <i class="fas fa-lock"></i>
+          <input type="password" formControlName="passwordLogin" placeholder="Contraseña" />
+        </div>
+        <!-- este es un boton :D -->
+        <button type="submit" class="btn">Iniciar</button>
+        <p class="social-text">O con</p>
+        <div>
+          <button (click)="signUpWithGoogle()" class="botonGoogle">
+            <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262">
+            <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path>
+            <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path>
+            <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"></path>
+            <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path>
+          </svg>
+            Continuar con Google
+          </button>
+        </div>
+        <!-- los iconos aun falta desarrollar para que ingresen con google y facebook -->
+        <!-- <div class="social-media">
+          
+          <a (click)="signUpWithGoogle()" class="social-icon">
+            <i class="fab fa-google"></i>
+          </a>
+        </div> -->
+      </form>
+
+      <!-- formulario de registro -->
+      <form (ngSubmit)="registrar()" [formGroup]="formRegister" action="#" class="sign-up-form">
+        <h2 class="title">Inscribirse</h2>
+        <!-- impunt para el corrego gaa -->
+        <div class="input-field form-control"
+          [ngClass]="{'is-invalid': formRegister.get('names')?.invalid && formRegister.get('names')?.touched}">
+          <i class="fas fa-user"></i>
+          <input type="text" formControlName="names" placeholder="Nombres" />
+          <span *ngIf="formRegister.get('names')?.hasError('required') && formRegister.get('names')?.touched"
+            class="text-danger mensaje-error">
+            Ingrese su nombre.
+          </span>
+        </div>
+        <!-- este para el correo -->
+        <div class="input-field form-control"
+          [ngClass]="{'is-invalid': formRegister.get('email')?.invalid && formRegister.get('email')?.touched}">
+          <i class="fas fa-envelope"></i>
+          <input type="email" formControlName="email" placeholder="Email" />
+          <!-- mensaje de error -->
+          <span *ngIf="formRegister.get('email')?.hasError('required') && formRegister.get('email')?.touched"
+            class="text-danger mensaje-error">
+            Ingrese su correo electrónico.
+          </span>
+          <span *ngIf="formRegister.get('email')?.hasError('email') && formRegister.get('email')?.touched"
+            class="text-danger mensaje-error">
+            Ingrese un correo valido
+          </span>
+        </div>
+        <!-- la contraseña -->
+        <div class="input-field form-control"
+          [ngClass]="{'is-invalid': formRegister.get('password')?.invalid && formRegister.get('password')?.touched}">
+          <i class="fas fa-lock"></i>
+          <input type="password" formControlName="password" placeholder="Contraseña" />
+          <span *ngIf="formRegister.get('password')?.hasError('required') && formRegister.get('password')?.touched"
+            class="text-danger mensaje-error">
+            Ingrese una contraseña
+          </span>
+          <span *ngIf="formRegister.get('contraseña')?.hasError('minlength') && formRegister.get('contraseña')?.touched"
+            class="text-danger mensaje-error">
+            La contraseña como minimo de 6 caracteres
+          </span>
+        </div>
+        <!-- repetir contraseña -->
+        <div class="input-field form-control"
+          [ngClass]="{'is-invalid': formRegister.get('repetirPassword')?.invalid && formRegister.get('repetirPassword')?.touched}">
+          <i class="fas fa-lock"></i>
+          <input type="repetirPassword" formControlName="repetirPassword" placeholder="Repetir Contraseña" />
+        </div>
+        <button type="submit" class="btn"> Crear cuenta</button>
+
+        <p class="social-text">O con</p>
+
+        <div>
+          <button (click)="signUpWithGoogle()" class="botonGoogle" >
+            <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262">
+            <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path>
+            <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path>
+            <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"></path>
+            <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path>
+          </svg>
+            Continuar con Google
+          </button>
+        </div>
+        <!-- <div class="social-media">
+          <a (click)="signUpWithGoogle()" class="social-icon">
+            <i class="fab fa-google"></i>
+          </a>
+
+        </div> -->
+      </form>
+    </div>
+  </div>
+
+  <div class="panels-container">
+    <div class="panel left-panel">
+      <div class="content">
+        <h3>¡Hola!, eres nuevo?</h3>
+        <p>
+          Introduce tus datos personales y comienza tu viaje con nosotros.
+        </p>
+        <button class="btn transparent" (click)="toggleMode()" id="sign-up-btn">
+          Inscribirse
+        </button>
+      </div>
+      <img src="../../../assets/img/log.svg" class="image" alt="" style="height: 45%;" />
+    </div>
+    <div class="panel right-panel">
+      <div class="content">
+        <h3>Ya tienes una cuenta?</h3>
+        <p>
+          Para mantenerse conectado con nosotros, inicie sesión con su información personal.
+        </p>
+        <button class="btn transparent" (click)="toggleMode()" id="sign-in-btn">
+          Iniciar sesión
+        </button>
+      </div>
+      <img src="../../../assets/img/register.svg" class="image" alt="" />
+    </div>
+  </div>
+</div>
+}
+
+
+@if (spinner) {
+  <app-spinner />
+}
