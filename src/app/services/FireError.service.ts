@@ -7,16 +7,22 @@ import { FirebaseError } from '@angular/fire/app';
 export class FireErrorService {
 
   constructor() { }
+
+  /**
+   * Devuelve un mensaje de error personalizado según el código de FirebaseError.
+   * @param error - Objeto FirebaseError que contiene detalles sobre el error.
+   * @returns Mensaje de error personalizado.
+   */
   CodeError(error: FirebaseError): string {
     switch (error.code) {
       case 'auth/weak-password':
-        return 'La contraseña es muy debil'
+        return 'La contraseña es muy débil.';
       case 'auth/invalid-email':
-        return 'El correo es invalido'
+        return 'El correo electrónico es inválido.';
       case 'auth/invalid-credential':
-        return 'Correo o contraseña incorrecta'
+        return 'Correo o contraseña incorrecta.';
       default:
-        return 'Error de autenticacion'
+        return 'Error de autenticación.';
     }
   }
 }
