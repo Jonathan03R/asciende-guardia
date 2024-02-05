@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import {  AngularFireAuthModule } from '@angular/fire/compat/auth'
+import { AngularFireAuthModule } from '@angular/fire/compat/auth'
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, NgClass, NgOptimizedImage } from '@angular/common';
 import { AuthService, Credential } from '../../services/auth.service';
@@ -19,8 +19,6 @@ interface LogInForm {
   emailLogin: FormControl<string>;
   passwordLogin: FormControl<string>;
 }
-
-
 
 
 @Component({
@@ -47,6 +45,7 @@ export default class AutenticacionComponent implements OnInit {
   private _router = inject(Router);
   private alert = inject(AlertasService);
 
+  
   ngOnInit(): void {
     this.authService.spinner$.subscribe(state => {
       this.spinner = state;
@@ -58,7 +57,7 @@ export default class AutenticacionComponent implements OnInit {
       validators: Validators.required,
       nonNullable: true,
     }),
-    
+
     email: this.formBuilder.control('', {
       validators: [Validators.required, Validators.email],
       nonNullable: true,
@@ -95,7 +94,15 @@ export default class AutenticacionComponent implements OnInit {
 
   async registrar(): Promise<void> {
 
-    
+    if (
+      !this.formRegister.value.names ||
+      !this.formRegister.value.email ||
+      !this.formRegister.value.password ||
+      !this.formRegister.value.repetirPassword
+    ) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
     const contraseña = this.formRegister.value.password;
     const repetirContraseña = this.formRegister.value.repetirPassword;
 
@@ -103,7 +110,7 @@ export default class AutenticacionComponent implements OnInit {
       alert('las contraseñas no son iguales -_-');
       return;
     }
-    this.spinner = true;
+
     const credential: Credential = {
       email: this.formRegister.value.email || '',
       password: this.formRegister.value.password || '',
@@ -112,40 +119,54 @@ export default class AutenticacionComponent implements OnInit {
     if (this.formRegister.invalid) return;
 
     await this.authService.sigUpWidthEmailAndPassword(credential);
-    
+
   }
 
 
   //logica para el login
   async logearse() {
-    
+    // Verificar campos obligatorios
+    if (!this.formLogin.value.emailLogin && !this.formLogin.value.passwordLogin) {
+      alert('Por favor, ingresa tu correo electrónico y contraseña');
+      return;
+    }
+
+    // Verificar correo electrónico vacío o inválido
+    if (!this.formLogin.value.emailLogin) {
+      alert('Por favor, ingresa tu correo electrónico');
+      return;
+    }
+
+    // Verificar contraseña vacía
+    if (!this.formLogin.value.passwordLogin) {
+      alert('Por favor, ingresa tu contraseña');
+      return;
+    }
 
     const credential: Credential = {
       email: this.formLogin.value.emailLogin || '',
       password: this.formLogin.value.passwordLogin || '',
     };
+
     if (this.formLogin.invalid) return;
+
     try {
       await this.authService.logInWhithEmailAndPassword(credential);
-      
     } catch (error: any) {
       this.alert.MensajeDeError(error.code);
-      
-      
     }
   }
 
 
-  async signUpWithGoogle(): Promise<void>{
+  async signUpWithGoogle(): Promise<void> {
     try {
       const result = await this.authService.signInWithGoogleProvider();
-      // aqui tiene que ir el mensaje
 
       this._router.navigateByUrl('/cargando');
       console.log(result);
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 
