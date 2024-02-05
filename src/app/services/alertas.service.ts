@@ -59,6 +59,20 @@ export class AlertasService {
     });
   }
 
+  public AlertaPersonalizadatres() {
+    Swal.fire({
+      title: "Tiempo Excedido",
+      icon: "info",
+      text: "El tiempo permitido ha sido excedido. Por favor, inicie sesión nuevamente.",
+      
+      confirmButtonText: 'ok'
+    }).then((result) => {
+        if (result.isConfirmed) {;
+            this._router.navigateByUrl('/auth');
+        }
+    });
+  }
+
   
 
 }

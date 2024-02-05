@@ -24,10 +24,6 @@ export interface Credential {
 })
 export class AuthService {
 
-  private inactivityTimer: any;
-  private inactivityDuration = 60000;
-
-
 
   private spinnerSubject = new BehaviorSubject<boolean>(false);
   public spinner$ = this.spinnerSubject.asObservable();
@@ -35,6 +31,39 @@ export class AuthService {
   private auth: Auth = inject(Auth);
   private _router = inject(Router);
   alert = inject(AlertasService)
+
+  private inactivityTimeout: number = 10 * 60 * 1000; 
+  private lastActivityTime: number = Date.now();
+
+  handleUserActivity(): void {
+    this.lastActivityTime = Date.now();
+  }
+
+  // Método para configurar el rastreo de inactividad
+  setupInactivityTracking(): void {
+    // Verificar si el usuario está autenticado
+    this.authState$.subscribe((user) => {
+      if (user) {
+        // Detectar actividad del usuario dentro de la aplicación
+        document.addEventListener('mousemove', () => this.handleUserActivity());
+        document.addEventListener('keydown', () => this.handleUserActivity());
+  
+        // Verificar inactividad en intervalos regulares
+        setInterval(() => {
+          const currentTime = Date.now();
+          const inactiveTime = currentTime - this.lastActivityTime;
+  
+          if (inactiveTime >= this.inactivityTimeout) {
+            // Usuario inactivo por mucho tiempo, cerrar sesión
+            this.logOut().then(() => {
+              this.alert.AlertaPersonalizadatres();
+            });
+          }
+        }, 600000); // Verificar cada minuto
+      }
+    });
+  }
+
 
   startSpinner(): void {
     this.spinnerSubject.next(true);
@@ -44,35 +73,9 @@ export class AuthService {
     this.spinnerSubject.next(false);
   }
 
-
-
   readonly authState$ = authState(this.auth);
+ 
 
-  resetInactivityTimer(): void {
-    clearTimeout(this.inactivityTimer);
-
-    this.inactivityTimer = setTimeout(() => {
-      this.showInactivityWarningAndLogout();
-    }, this.inactivityDuration);
-  }
-
-  showInactivityWarningAndLogout(): void {
-    // Quitar los eventos del usuario antes de mostrar la alerta y cerrar la sesión
-    window.removeEventListener('mousemove', this.resetInactivityTimer.bind(this));
-    window.removeEventListener('keydown', this.resetInactivityTimer.bind(this));
-
-    // Mostrar el mensaje de inactividad y cerrar sesión
-    alert('Tu sesión ha expirado debido a inactividad.');
-    this.logOut();
-  }
-
-  startInactivityTimer(): void {
-    window.addEventListener('mousemove', this.resetInactivityTimer.bind(this));
-    window.addEventListener('keydown', this.resetInactivityTimer.bind(this));
-
-    // Iniciar el temporizador al inicializar el servicio
-    this.resetInactivityTimer();
-  }
 
 
   async sigUpWidthEmailAndPassword(credential: Credential): Promise<UserCredential | void> {
@@ -144,7 +147,7 @@ export class AuthService {
       const result = await signInWithPopup(this.auth, provider);
       return result
     } catch (error: any) {
-      return (error)
+      return Promise.reject(error);
     }
   }
 

@@ -15,16 +15,7 @@ export class AppComponent {
 
   private authService = inject(AuthService);
 
-  ngOnInit(): void {
-    // Escuchar el estado de autenticación
-    this.authService.authState$.subscribe(user => {
-      if (user) {
-        // El usuario ha iniciado sesión, reiniciar el temporizador de inactividad
-        this.authService.resetInactivityTimer();
-      }
-    });
-
-    // Iniciar el temporizador de inactividad al cargar la aplicación
-    this.authService.startInactivityTimer();
+  constructor(){
+    this.authService.setupInactivityTracking();
   }
 }

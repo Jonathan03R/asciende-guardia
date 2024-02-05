@@ -7,6 +7,8 @@ import { AuthService, Credential } from '../../services/auth.service';
 import { AlertasService } from '../../services/alertas.service';
 import SpinnerComponent from '../../shared/spinner/spinner.component';
 
+
+// DEFINICION DE INTERFACES PARA LOS FORMULARIOS
 interface SignUpForm {
   names: FormControl<string>;
   email: FormControl<string>;
@@ -38,6 +40,8 @@ interface LogInForm {
   styleUrl: './autenticacion.component.css'
 })
 export default class AutenticacionComponent implements OnInit {
+
+    // Propiedad para controlar la visibilidad del spinner
   public spinner: boolean = false;
 
   formBuilder = inject(FormBuilder);
@@ -85,6 +89,7 @@ export default class AutenticacionComponent implements OnInit {
 
   // logica para cambiar de pantalla en la pantalla para registrarse y loguearse
   isSignUpMode: boolean = false;
+  private signInWithGoogleClicked: boolean = false;
 
   toggleMode() {
     this.isSignUpMode = !this.isSignUpMode;
@@ -125,27 +130,22 @@ export default class AutenticacionComponent implements OnInit {
 
   //logica para el login
   async logearse() {
-    // Verificar campos obligatorios
-    if (!this.formLogin.value.emailLogin && !this.formLogin.value.passwordLogin) {
-      alert('Por favor, ingresa tu correo electrónico y contraseña');
+    // Evitar la acción predeterminada del formulario cuando se hace clic en el botón de Google
+    if (this.signInWithGoogleClicked) {
+      // Si se hizo clic en el botón de Google, cancelar la ejecución
+      this.signInWithGoogleClicked = false;
       return;
     }
+    const emailLogin = this.formLogin.value.emailLogin;
+    const passwordLogin = this.formLogin.value.passwordLogin;
 
-    // Verificar correo electrónico vacío o inválido
-    if (!this.formLogin.value.emailLogin) {
-      alert('Por favor, ingresa tu correo electrónico');
+    if (!emailLogin || !passwordLogin) {
+      alert('Dejaste campos vacíos. Por favor, completa todos los campos.');
       return;
     }
-
-    // Verificar contraseña vacía
-    if (!this.formLogin.value.passwordLogin) {
-      alert('Por favor, ingresa tu contraseña');
-      return;
-    }
-
     const credential: Credential = {
-      email: this.formLogin.value.emailLogin || '',
-      password: this.formLogin.value.passwordLogin || '',
+      email: emailLogin,
+      password: passwordLogin,
     };
 
     if (this.formLogin.invalid) return;
@@ -160,6 +160,7 @@ export default class AutenticacionComponent implements OnInit {
 
   async signUpWithGoogle(): Promise<void> {
     try {
+      this.signInWithGoogleClicked = true;
       const result = await this.authService.signInWithGoogleProvider();
 
       this._router.navigateByUrl('/cargando');
