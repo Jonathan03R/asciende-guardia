@@ -24,6 +24,11 @@ export interface Credential {
 })
 export class AuthService {
 
+  private inactivityTimer: any;
+  private inactivityDuration = 60000;
+
+
+
   private spinnerSubject = new BehaviorSubject<boolean>(false);
   public spinner$ = this.spinnerSubject.asObservable();
 
@@ -40,7 +45,35 @@ export class AuthService {
   }
 
 
+
   readonly authState$ = authState(this.auth);
+
+  resetInactivityTimer(): void {
+    clearTimeout(this.inactivityTimer);
+
+    this.inactivityTimer = setTimeout(() => {
+      this.showInactivityWarningAndLogout();
+    }, this.inactivityDuration);
+  }
+
+  showInactivityWarningAndLogout(): void {
+    // Quitar los eventos del usuario antes de mostrar la alerta y cerrar la sesión
+    window.removeEventListener('mousemove', this.resetInactivityTimer.bind(this));
+    window.removeEventListener('keydown', this.resetInactivityTimer.bind(this));
+
+    // Mostrar el mensaje de inactividad y cerrar sesión
+    alert('Tu sesión ha expirado debido a inactividad.');
+    this.logOut();
+  }
+
+  startInactivityTimer(): void {
+    window.addEventListener('mousemove', this.resetInactivityTimer.bind(this));
+    window.addEventListener('keydown', this.resetInactivityTimer.bind(this));
+
+    // Iniciar el temporizador al inicializar el servicio
+    this.resetInactivityTimer();
+  }
+
 
   async sigUpWidthEmailAndPassword(credential: Credential): Promise<UserCredential | void> {
     try {
@@ -57,9 +90,9 @@ export class AuthService {
     } catch (error: any) {
       this.stopSpinner();
       this.alert.MensajeDeError(error);
-      
+
       return console.log(error);
-      
+
 
     }
   }
@@ -133,8 +166,6 @@ export class AuthService {
     }
     return Promise.reject(new Error('No se pudo encontrar el usuario actual.'));
   }
-
-
 
 
 
