@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './inicio.component.css'
 })
 export default class InicioComponent {
+  private _router = inject(Router);
 
+  redirectToPractica() {
+    this._router.navigate(['/dash/practica']);
+  }
 }

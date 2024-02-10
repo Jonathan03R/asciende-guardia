@@ -1,4 +1,45 @@
-<div class=" d-flex justify-content-center align-items-center vh-100" style="background-color: #6d8517;">
-    <h1 class="text-white">Hola, aqui tiene que ir las practicas?</h1>
-  </div>
+<section class="practica" id="practica">
+    <div class="container">
+        <div class="box box1 pb-4">
+            <h2>Practica Segun tus necesidades</h2>
+            <p>Selecciona una opcion</p>
+        </div>
+        <!-- <div class="box box2">
+            <img src="../../../assets/img/logoerror.png" style="height: auto ; width: 200px;">
 
+        </div> -->
+        <div class="box botones pb-4">
+            <div class="radio-button-container">
+                <div class="radio-button">
+                    <input type="radio" class="radio-button__input" id="radio1" name="radio-group" (change)="toggleSelect()">
+                    <label class="radio-button__label" for="radio1">
+                        <span class="radio-button__custom"></span>
+                        Practicar todos los temas disponibles
+                    </label>
+                </div>
+                <div class="radio-button">
+                    <input type="radio" class="radio-button__input" id="radio2" name="radio-group"  (change)="toggleSelect()">
+                    <label class="radio-button__label" for="radio2">
+                        <span class="radio-button__custom"></span>
+                        Seleccionar temas específicos para practicar
+                    </label>
+                </div>
+                
+            </div>
+
+        </div>
+        @if (this.mostrarSelect == true) {
+            <div class="box box3 ">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Seleccion de tema</option>
+                    @for (item of items; track $index) {
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    }
+    
+                </select>
+            </div>
+    
+        }
+        
+    </div>
+</section>

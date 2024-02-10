@@ -1,10 +1,10 @@
 <div class="  nav-jona">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg  navbar-dark " style="background-color: #086f97;">
+    <nav class="navbar navbar-expand-lg  navbar-dark " style="background-color: #084762;">
         <div class="container">
  
             <!-- logo -->
-            <div (click)="redirectToPantallaCarga() " style="cursor: pointer;">
+            <div class="logo" (click)="redirectToPantallaCarga() " style="cursor: pointer;">
                 <img src="../../../assets/img/logo.svg" alt="" style="height: 50px;" class="me-3">
                 <a class="navbar-brand">Asciende Guardia</a>
             </div>
@@ -27,8 +27,8 @@
                 <div class="offcanvas-body d-flex flexcolumn- flex-lg-row p-4 p-lg-0">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         @for (item of menuItems; track $index) {
-                        <li class="nav-item mx-2" style="cursor: pointer;">
-                            <a [routerLink]="item.path" routerLinkActive="active" class="nav-link">
+                        <li class=" mx-2" style="cursor: pointer;"> 
+                            <a [routerLink]="item.path" routerLinkActive="active">
                                 {{item.title}}</a>
                         </li>
                         }

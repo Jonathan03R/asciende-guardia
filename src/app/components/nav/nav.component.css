@@ -1,3 +1,36 @@
+.logo{
+  align-items: center;
+  display: flex;
+}
+.logo .navbar-brand{
+  font-size: 20px;
+  align-items: center;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar-nav {
+  align-items: center;
+}
+.navbar-nav li a{
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.5s;
+}
+
+.navbar-nav li a:hover{
+  color: #0981b2;
+}
+
+.navbar-nav li a.active {
+  color: #365563;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.5s;
+}
+
 .dropdown-toggle:not(:focus) {
   outline: 0;
 }
