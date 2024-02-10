@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export default class PracticarComponent {
   mostrarSelect: boolean = false;
+  mostrarOptions: boolean = false;
 
 
   logMostrarSelect() {
@@ -22,12 +23,23 @@ export default class PracticarComponent {
     const radio1 = document.getElementById('radio1') as HTMLInputElement;
     if (radio2.checked) {
       this.mostrarSelect = true;
+      this.mostrarOptions = false;
       console.log('El radio button está activo');
     } else if (radio1.checked) {
       this.mostrarSelect = false;
+      this.mostrarOptions = true
       console.log('El radio button ya no está activo');
     }
   }
+
+  options = [
+    {
+      id:1, name: 'Todas las preguntas'
+    },
+    {
+      id:2, name: 'Preguntas equivocadas'
+    }
+  ]
 
   items = [
     { id: 1, name: 'Tema 1' },

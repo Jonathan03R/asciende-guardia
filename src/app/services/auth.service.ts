@@ -62,7 +62,7 @@ export class AuthService {
               this.alert.AlertaPersonalizadatres();
             });
           }
-        }, 600000);
+        }, 60000);
       }
     });
   }
