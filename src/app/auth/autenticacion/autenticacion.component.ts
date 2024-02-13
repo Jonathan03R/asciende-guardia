@@ -6,6 +6,7 @@ import { CommonModule, NgClass, NgOptimizedImage } from '@angular/common';
 import { AuthService, Credential } from '../../services/auth.service';
 import { AlertasService } from '../../services/alertas.service';
 import SpinnerComponent from '../../shared/spinner/spinner.component';
+import { BackendUserService } from '../../services/serviciosBackend/backendUser.service';
 
 
 // DEFINICION DE INTERFACES PARA LOS FORMULARIOS
@@ -41,20 +42,25 @@ interface LogInForm {
 })
 export default class AutenticacionComponent implements OnInit {
 
-    // Propiedad para controlar la visibilidad del spinner
+  // Propiedad para controlar la visibilidad del spinner
   public spinner: boolean = false;
 
   formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
+  private backendUser = inject(BackendUserService);
+
   private _router = inject(Router);
   private alert = inject(AlertasService);
+  //metodo para registrar usuario a la base de ddatos sql 
 
-  
   ngOnInit(): void {
     this.authService.spinner$.subscribe(state => {
       this.spinner = state;
     });
   }
+
+
+
 
   formRegister: FormGroup<SignUpForm> = this.formBuilder.group({
     names: this.formBuilder.control('', {
@@ -122,7 +128,7 @@ export default class AutenticacionComponent implements OnInit {
     };
 
     if (this.formRegister.invalid) return;
-
+    this.registrarUsuario();
     await this.authService.sigUpWidthEmailAndPassword(credential);
 
   }
@@ -139,8 +145,17 @@ export default class AutenticacionComponent implements OnInit {
     const emailLogin = this.formLogin.value.emailLogin;
     const passwordLogin = this.formLogin.value.passwordLogin;
 
-    if (!emailLogin || !passwordLogin) {
-      alert('Dejaste campos vacíos. Por favor, completa todos los campos.');
+
+
+    if (!emailLogin) {
+      alert('Por favor, ingresa un correo electrónico válido.');
+      return;
+    }
+
+    const usuario_correo = emailLogin;
+    
+    if (!passwordLogin) {
+      alert('Por favor, ingresa tu contraseña.');
       return;
     }
     const credential: Credential = {
@@ -152,6 +167,10 @@ export default class AutenticacionComponent implements OnInit {
 
     try {
       await this.authService.logInWhithEmailAndPassword(credential);
+      this.backendUser.getUserInfo(usuario_correo).subscribe(userInfo => {
+        // Aquí puedes manejar la información del usuario recibida lo que tiene la base de datos sql
+        console.log('Información del usuario:', userInfo);
+      });
     } catch (error: any) {
       this.alert.MensajeDeError(error.code);
     }
@@ -170,6 +189,29 @@ export default class AutenticacionComponent implements OnInit {
 
     }
   }
+
+  //****************************** IMPLENETACION DEL BACKEND **********************************************************
+  registrarUsuario(): void {
+    // Llama al método registerUser del servicio BackendUserService
+    const userData = {
+      usuario_nombre: this.formRegister.value.names,
+      usuario_correo: this.formRegister.value.email,
+      // Aquí puedes agregar más campos si es necesario
+    };
+
+    this.backendUser.registerUser(userData).subscribe(
+      response => {
+        // Maneja la respuesta del servidor después de registrar al usuario
+        console.log('Usuario registrado exitosamente');
+      },
+      error => {
+        // Maneja cualquier error que ocurra durante la solicitud al servidor
+        console.error('Error al registrar usuario:', error);
+      }
+    );
+  }
+
+  
 
 
 
