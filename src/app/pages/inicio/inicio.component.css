@@ -3,67 +3,82 @@ font-family: 'Patua One', serif;
 font-family: 'Poppins', sans-serif;
 */
 .inicio {
-    height: 100vh;
-    background-image: linear-gradient(to bottom right, #82c4e8, #f6f6f6) ; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-family:'Poppins', sans-serif;
+  height: 100vh;
+  background-image: linear-gradient(to bottom right, #82c4e8, #f6f6f6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 h1 {
-    background-image: linear-gradient(to bottom right, #084762, #4ba0e0);
-    color: #82c4e8;
-    font-size: 40px;
-    font-weight: 900;
+  background-image: linear-gradient(to bottom right, #084762, #4ba0e0);
+  color: #82c4e8;
+  font-size: 40px;
+  font-weight: 900;
 
-    -webkit-background-clip: text;
+  -webkit-background-clip: text;
   background-clip: text;
-    color: transparent;
+  color: transparent;
 }
 
-p{
-    width: 70%;
-    font-weight: 500;
-    font-size: 18px;
+p {
+  width: 70%;
+  font-weight: 500;
+  font-size: 18px;
 }
 
 .btn {
-    display: inline-block;
-    font-weight: bold;
-    color: #000000;
-    margin: 1rem auto;
-    padding: 0.7rem 2rem;
-    border-radius: 30em;
-    border-style: none;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background-color: transparent;
-    box-shadow: 1px 1px 12px #000000;
-  }
-  
-  .btn::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #084762;
-    transform: translateX(-101%);
-    transition: all .3s ease;
-    z-index: -1;
-  }
-  
-  .btn:hover {
-    color: #ffffff;
-    transition: all .3s ease;
-  }
-  
-  .btn:hover::before {
-    transform: translateX(0);
-  }
+  display: inline-block;
+  font-weight: bold;
+  color: #000000;
+  margin: 1rem auto;
+  padding: 0.7rem 2rem;
+  border-radius: 30em;
+  border-style: none;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background-color: transparent;
+  box-shadow: 1px 1px 12px #000000;
+}
+
+.btn::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #084762;
+  transform: translateX(-101%);
+  transition: all .3s ease;
+  z-index: -1;
+}
+
+.btn:hover {
+  color: #ffffff;
+  transition: all .3s ease;
+}
+
+.btn:hover::before {
+  transform: translateX(0);
+}
+
+.box-2 img{
+  width: 100px;
+  height: 100px;
+
+}
+
+.box {
+  height: 400px;
+}
+
+.box-3 .text-Simulacro{
+  width: 100%;
+} 
+

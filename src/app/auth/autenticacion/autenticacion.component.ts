@@ -172,7 +172,8 @@ export default class AutenticacionComponent implements OnInit {
         console.log('Información del usuario:', userInfo);
       });
     } catch (error: any) {
-      this.alert.MensajeDeError(error.code);
+      console.log(error)
+      // this.alert.MensajeDeError(error.code);
     }
   }
 

@@ -16,7 +16,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { AlertasService } from './alertas.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface Credential {
   email: string;
@@ -59,7 +59,7 @@ export class AuthService {
 
           if (inactiveTime >= this.inactivityTimeout) {
             this.logOut().then(() => {
-              this.alert.AlertaPersonalizadatres();
+              // this.alert.AlertaPersonalizadatres();
             });
           }
         }, 60000);
@@ -96,7 +96,7 @@ export class AuthService {
       return result;
     } catch (error: any) {
       this.stopSpinner();
-      this.alert.MensajeDeError(error);
+      // this.alert.MensajeDeError(error);
       return console.log(error);
     }
   }
@@ -116,7 +116,7 @@ export class AuthService {
 
       if (result.user && !result.user.emailVerified) {
         await this.sendEmailVerification();
-        this.alert.AlertaPersonalizada('error', 'Cuenta No Verificada', 'Revise su correo para su verificación');
+        // this.alert.AlertaPersonalizada('error', 'Cuenta No Verificada', 'Revise su correo para su verificación');
         await this.logOut();
         this._router.navigateByUrl('/');
         return;
@@ -125,7 +125,7 @@ export class AuthService {
       }
       return result;
     } catch (error: any) {
-      this.alert.MensajeDeError(error);
+      // this.alert.MensajeDeError(error);
       return console.log(error);
     }
   }

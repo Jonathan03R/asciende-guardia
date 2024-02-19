@@ -6,7 +6,8 @@ import { AuthService } from './services/auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule,
+    RouterOutlet,],
   templateUrl: './app.component.html',
 })
 export class AppComponent {
@@ -14,7 +15,7 @@ export class AppComponent {
 
   private authService = inject(AuthService);
 
-  constructor(){
+  constructor() {
     this.authService.setupInactivityTracking();
   }
 }
