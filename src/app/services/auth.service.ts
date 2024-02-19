@@ -35,7 +35,7 @@ export class AuthService {
   // Inyección de dependencias
   private auth: Auth = inject(Auth);
   private _router = inject(Router);
-  alert = inject(AlertasService)
+  private alert = inject(AlertasService)
 
   // Configuración para el rastreo de inactividad
   private inactivityTimeout: number = 60 * 60 * 1000;
@@ -59,7 +59,7 @@ export class AuthService {
 
           if (inactiveTime >= this.inactivityTimeout) {
             this.logOut().then(() => {
-              // this.alert.AlertaPersonalizadatres();
+              this.alert.alertas();
             });
           }
         }, 60000);
@@ -116,7 +116,7 @@ export class AuthService {
 
       if (result.user && !result.user.emailVerified) {
         await this.sendEmailVerification();
-        // this.alert.AlertaPersonalizada('error', 'Cuenta No Verificada', 'Revise su correo para su verificación');
+        this.alert.alertaPersonalizadas2('Cuenta No Verficada', 'revise su correo para su verificación');
         await this.logOut();
         this._router.navigateByUrl('/');
         return;
@@ -125,7 +125,7 @@ export class AuthService {
       }
       return result;
     } catch (error: any) {
-      // this.alert.MensajeDeError(error);
+      this.alert.alertasFireBase(error);
       return console.log(error);
     }
   }

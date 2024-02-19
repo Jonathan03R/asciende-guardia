@@ -111,14 +111,16 @@ export default class AutenticacionComponent implements OnInit {
       !this.formRegister.value.password ||
       !this.formRegister.value.repetirPassword
     ) {
-      alert('Por favor, completa todos los campos');
+      
+      this.alert.alertasPersonalizadas('Por favor, completa todos los campos');
       return;
     }
     const contraseña = this.formRegister.value.password;
     const repetirContraseña = this.formRegister.value.repetirPassword;
 
     if (contraseña !== repetirContraseña) {
-      alert('las contraseñas no son iguales -_-');
+      this.alert.alertasPersonalizadas('las contraseñas no son iguales 🤡');
+      
       return;
     }
 
@@ -148,14 +150,15 @@ export default class AutenticacionComponent implements OnInit {
 
 
     if (!emailLogin) {
-      alert('Por favor, ingresa un correo electrónico válido.');
+      this.alert.alertasPersonalizadas('Por favor, ingresa un correo electrónico válido.');
+      
       return;
     }
 
     const usuario_correo = emailLogin;
     
     if (!passwordLogin) {
-      alert('Por favor, ingresa tu contraseña.');
+      this.alert.alertasPersonalizadas('Por favor, ingresa tu contraseña.');
       return;
     }
     const credential: Credential = {
@@ -173,7 +176,7 @@ export default class AutenticacionComponent implements OnInit {
       });
     } catch (error: any) {
       console.log(error)
-      // this.alert.MensajeDeError(error.code);
+      this.alert.alertasFireBase(error.code);
     }
   }
 

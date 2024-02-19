@@ -69,9 +69,7 @@ export default class PracticarComponent {
   }
 
   alertas(): void {
-    bootbox.alert('Hello world!', () => {
-      console.log('Alert Callback');
-    });
+    this.alert.alertas();
   }
 
   
