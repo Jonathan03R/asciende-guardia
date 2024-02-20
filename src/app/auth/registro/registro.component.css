@@ -1,0 +1,25 @@
+#registro{
+  background-color: #20a0df;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.formRegistro{
+  padding: 10px;
+  font-weight: bold;
+}
+.formRegistro h1 {
+  font-weight: 700;
+  color: #105272;
+  margin-bottom: 30px;
+}
+
+.formRegistro h1 span {
+  color: #efff12;
+}
+
+.formRegistro form{
+  border-radius: 20px;
+  padding: 45px;
+  background-color: #105272;
+}

@@ -5,18 +5,20 @@ import { authGuard, publicGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
-        // Ruta para la autenticación
         path: '',
-        loadComponent: () => import('./auth/autenticacion/autenticacion.component'),
+        loadComponent: () => import('./auth/principal/principal.component'),
         canActivate: [publicGuard], // Guardia de ruta para usuarios no autenticados
     },
     {
-        // Ruta de autenticación (también se usa para redireccionar en caso de rutas desconocidas)
         path: 'auth',
-        loadComponent: () => import('./auth/autenticacion/autenticacion.component'),
+        loadComponent: () => import('./auth/login/login.component'),
         canActivate: [publicGuard], // Guardia de ruta para usuarios no autenticados
     },
-
+    {
+        path: 'principal',
+        loadComponent: () => import('./auth/principal/principal.component'),
+        canActivate: [publicGuard],
+    },
     {
         // Ruta para la pantalla de carga
         path: 'cargando',

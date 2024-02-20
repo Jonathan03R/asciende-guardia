@@ -25,10 +25,25 @@ export class AlertasService {
   }
 
   // Alerta , Aviso , Personalizado
-  alertaPersonalizadas2( title: string , message:string) {
+  alertaPersonalizadas2(title: string, message: string) {
     bootbox.confirm({
       title: title,
       message: message,
+      callback: () => {
+        // No necesitas hacer nada aquí ya que simplemente quieres cerrar el cuadro de diálogo
+      }
+    });
+  }
+
+  alertaPersonalizadasGmail(title: string, message: string) {
+    bootbox.confirm({
+      title: title,
+      message: message,
+      callback: (result: boolean) => {
+        if (result) {
+          window.open('https://mail.google.com', '_blank');
+        }
+      }
     });
   }
 

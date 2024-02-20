@@ -21,6 +21,8 @@ export class FireErrorService {
         return 'El correo electrónico es inválido.';
       case 'auth/invalid-credential':
         return 'Correo o contraseña incorrecta.';
+      case 'auth/email-already-in-use':
+        return 'El correo ya existe';
       default:
         return 'Error de autenticación.';
     }

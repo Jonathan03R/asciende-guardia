@@ -1,0 +1,107 @@
+<div class="inicio">
+
+    <div class="container">
+        <div class="botonesRegistroInicio d-flex justify-content-between">
+            <img src="../../../assets/img/logo.svg" alt="" style="width: 75px; height: auto;">
+            <div>
+                <button (click)="redireccionarLogin()" class="btnIniciar mx-2">INICIAR SESIÓN</button>
+                <button class=" btnRegistrar mx-2 " (click)="scrollToRegistro()">REGISTRATE GRATIS</button>
+            </div>
+        </div>
+        <div class="box-incio d-flex flex-column justify-content-center align-item-center">
+            <div class="d-flex ">
+                <div class="box-tittle">
+                    <h1 class="pb-3">¡Bienvenido a Asciende Guardia! </h1>
+                    <h3>Estudia y practica para el examen PNP</h3>
+                    <p class="pt-2 pb-3">Te ofrecemos la forma más eficaz de estudiar y practicar para el examen del
+                        Ascenso
+                        de la Policia Nacional del Perú</p>
+                </div>
+
+                <div>
+                    <img src="../../../assets/img/logoerror.png  " alt="" height="auto" width="150px">
+                </div>
+            </div>
+            <div>
+                <button class="btn">
+                    Comenzar
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="container d-flex flex-column justify-content-center">
+    <div class="section-2 flex-column d-flex align-items-center">
+        <h1 class="mt-5 mb-3 text-center">¿Es posible mejorar mis puntajes?</h1>
+        <p class="mt-3 text-center">Nos dedicamos a apoyarte en tu búsqueda del mejor puntaje.
+            Por eso, hemos creado una solución de práctica que es accesible para todos y cada uno de ustedes.</p>
+    </div>
+
+    <div class="box-2 container mt-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+            <div class="col">
+                <div class="box text-center rounded-lg shadow p-4">
+                    <div class=" rounded-circle text-white d-flex justify-content-center align-items-center mx-auto mb-3"
+                        style="width: 100px; height: 100px;">
+                        <img src="../../../assets/iconosInicio/adaptacion.png" alt="">
+                    </div>
+                    <div class="d-flex flex-column align-items-center ">
+                        <h4 class="mt-3 mb-4 font-weight-bold">Flexibilidad</h4>
+                        <p class="mb-0 text-center ">Explora a tu propio ritmo, en el momento que mejor se adapte a ti.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box text-center rounded-lg shadow p-4">
+                    <div class=" rounded-circle text-white d-flex justify-content-center align-items-center mx-auto mb-3"
+                        style="width: 100px; height: 100px;">
+                        <img src="../../../assets/iconosInicio/accesibilidad.png" alt="">
+                    </div>
+                    <div class="d-flex flex-column align-items-center ">
+                        <h4 class="mt-3 mb-4 font-weight-bold">Accesibilidad</h4>
+                        <p class="mb-0">Disfruta de tus prácticas desde tu computadora o dispositivo móvil, en cualquier
+                            momento y lugar.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box text-center rounded-lg shadow p-4">
+                    <div class=" rounded-circle text-white d-flex justify-content-center align-items-center mx-auto mb-3"
+                        style="width: 100px; height: 100px;">
+                        <img src="../../../assets/iconosInicio/rapido.png " alt="">
+                    </div>
+                    <div class="d-flex flex-column align-items-center ">
+                        <h4 class="mt-3 mb-4 font-weight-bold">Inmediatez</h4>
+                        <p class="mb-0">Obtendrás de manera inmediata los resultados de tus simulacros.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="box-3 container-md mb-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="pb-3">Practica Simulacros</h1>
+            <p class="text-Simulacro">Nuestros simulacros imitan fielmente el formato y la dificultad del
+                examen real. Practicar con ellos te preparará para:</p>
+            <ul class="list-unstyled">
+                @for (item of items; track $index) {
+                <li class="pb-2"><img class="mr-2" src="../../../assets/iconosInicio/verificar.png" alt=""> {{
+                    item.name}}</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-6 ">
+            <img class="img-fluid" src="../../../assets/iconosInicio/policias.jpg" alt="">
+        </div>
+    </div>
+</div>
+
+<app-registro></app-registro>
+
+<app-price-plan></app-price-plan>

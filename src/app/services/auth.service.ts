@@ -92,11 +92,12 @@ export class AuthService {
         credential.password
       );
       await this.sendEmailVerification();
+      this.alert.alertasPersonalizadas("Registro exitoso");
       this._router.navigateByUrl('/v-r')
       return result;
     } catch (error: any) {
       this.stopSpinner();
-      // this.alert.MensajeDeError(error);
+      this.alert.alertasFireBase(error);
       return console.log(error);
     }
   }
@@ -116,7 +117,7 @@ export class AuthService {
 
       if (result.user && !result.user.emailVerified) {
         await this.sendEmailVerification();
-        this.alert.alertaPersonalizadas2('Cuenta No Verficada', 'revise su correo para su verificación');
+        this.alert.alertaPersonalizadasGmail('Cuenta No Verficada', 'revise su correo para su verificación');
         await this.logOut();
         this._router.navigateByUrl('/');
         return;
