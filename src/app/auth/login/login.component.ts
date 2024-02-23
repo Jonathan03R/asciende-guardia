@@ -7,6 +7,7 @@ import { AuthService , Credential} from '../../services/auth.service';
 import { BackendUserService } from '../../services/serviciosBackend/backendUser.service';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import SpinnerComponent from '../../shared/spinner/spinner.component';
+import { UserInfoServiceService } from '../../services/UserInfoService.service';
 
 interface LogInForm {
   emailLogin: FormControl<string>;
@@ -38,6 +39,7 @@ export default class LoginComponent {
 
   private _router = inject(Router);
   private alert = inject(AlertasService);
+  private userInfoService = inject(UserInfoServiceService);
 
 
   formLogin: FormGroup<LogInForm> = this.formBuilder.group({
@@ -81,6 +83,7 @@ export default class LoginComponent {
       await this.authService.logInWhithEmailAndPassword(credential);
       this.backendUser.getUserInfo(usuario_correo).subscribe(userInfo => {
         // Aquí puedes manejar la información del usuario recibida lo que tiene la base de datos sql
+        this.userInfoService.setUserInfo(userInfo);
         console.log('Información del usuario:', userInfo);
       });
     } catch (error: any) {

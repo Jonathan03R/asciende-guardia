@@ -1,0 +1,29 @@
+
+#examen{
+  padding-top: 80px;
+}
+
+.card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+li {
+  list-style-type: none;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+li .card:hover {
+  border: 1px solid blue;
+}
+
+ol {
+  padding: 0;
+}
+
+.correct {
+  background-color: green;
+  /* Otros estilos para resaltar la respuesta correcta */
+}

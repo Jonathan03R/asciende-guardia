@@ -1,52 +1,43 @@
+@if(this.examen){
 <div class="practica">
     <div class="titulo-box text-center mb-14 pb-5">
         <h1>Resumen <span class="">General</span></h1>
     </div>
 
-    <section class="container pb-5 ">
+    <section class="info container pb-5 ">
         <div class="row justify-content-center ">
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="border border-gray-300 py-5 px-5 text-center">
-                    <h3>0</h3>
-                    <div class="mt-6 bg-secondary" style="height: 2px; width: 6rem;"></div>
-                    <h4 class="text-gray-700 text-uppercase mt-2">Puntaje General</h4>
+                <div class="border rounded-top py-4 px-3 text-center">
+                    <h4>0</h4>
+                    <hr>
+                    <h6>Simulacros Realizados</h6>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="border border-gray-300 py-5 px-5 text-center">
-                    <h3>0</h3>
-                    <div class="mt-4 bg-secondary" style="height: 2px; width: 6rem;"></div>
-                    <h4 class="text-gray-700 text-uppercase mt-2">Puntaje General</h4>
+                <div class="border rounded-top py-4 px-3 text-center">
+                    <h4>0</h4>
+                    <hr>
+                    <h6>Mejor puntaje</h6>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="border border-gray-300 py-5 px-5 text-center">
-                    <h3>0</h3>
-                    <div class="mt-4 bg-secondary" style="height: 2px; width: 6rem;"></div>
-                    <h4 class="text-gray-700 text-uppercase mt-2">Puntaje General</h4>
+                <div class="border rounded-top border-gray py-4 px-3 text-center">
+                    <h4>0</h4>
+                    <hr>
+                    <h6>Respuestas Equivocadas</h6>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="border border-gray-300 py-5 px-4 text-center">
-                    <div class="row">
-                        <div class="col-4">
-                            <h3>0</h3>
-                            <div class="bg-secondary" style="height: 2px; width: 8rem;"></div>
-                        </div>
-                        <div class="col-8">
-                            <h4 class="text-uppercase text-end">Puntaje General</h4>
-                        </div>
-                    </div>
-                    
+                <div class="border rounded-top border-gray py-4 px-3 text-center">
+                    <h4>0</h4>
+                    <hr>
+                    <h6>Respuestas Buenas</h6>
                 </div>
             </div>
         </div>
     </section>
     <div class="temas-disponibles">
         <div class="container d-flex flex-column align-item-center justify-content-center">
-            <div class="pb-5 ">
-                <h1 class="text-center">Temas Disponibles</h1>
-            </div>
             <div>
                 <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
                     @for (slide of slides; track slide) {
@@ -58,7 +49,7 @@
                                 <p class="card-text">Some quick example text to build on the card title and make up the
                                     bulk
                                     of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <a (click)="ComenzarExamen()" class="btn btn-primary">Comenzar</a>
                             </div>
                         </div>
                     </div>
@@ -68,3 +59,6 @@
         </div>
     </div>
 </div>
+}@else{
+    <app-examen></app-examen>
+}

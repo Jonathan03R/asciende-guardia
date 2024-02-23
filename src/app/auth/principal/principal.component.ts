@@ -34,6 +34,11 @@ export default class PrincipalComponent {
     registroElement.scrollIntoView({ behavior: 'smooth' });
   }
 
+  scrollToPlanes() {
+    const registroElement = this.el.nativeElement.querySelector('app-price-plan');
+    registroElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
   redireccionarLogin(){
     this._router.navigateByUrl('/auth')
   }

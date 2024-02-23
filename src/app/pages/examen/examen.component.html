@@ -1,0 +1,84 @@
+<section id="examen">
+    <div class="container">
+        <div class="card">
+            <div class="d-flex justify-content-between p-3">
+                <div class="image">
+                    <img src="../../../assets/img/logo.svg" width="90" alt="logo">
+                </div>
+                <div class="quiz-header">
+                    <h4 style="font-family: cursive;">Prueba de exaemn</h4>
+                    <span style="font-style: italic;">Bienvenido {{name}}</span>
+                </div>
+            </div>
+            @if (!isQuizCompleted) {
+            <ng-container>
+                <div class="d-flex justify-content-around py-3">
+                    <div class="score">
+                        <h5>{{points}} Points</h5>
+                    </div>
+                    <div class="question-remain">
+                        <span style="font-style: italic;">pregunta {{preguntaActualIndex }} de
+                            {{preguntas.length}}</span>
+                    </div>
+                    <div class="timer">
+                        <h5>{{counter}} sec ⏱</h5>
+                    </div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                        [ngStyle]="{'width':progress+'%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+                <div class="question">
+                    <div class="card">
+                        <h3>{{preguntaActual.pregunta_enunciado}}</h3>
+                    </div>
+                </div>
+                <div class="options">
+                    @if (preguntaActual) {
+                    <h3>{{ preguntaActual.pregunta_enunciado }}</h3>
+                    <ol>
+                        <li *ngFor="let respuesta of [preguntaActual.respuesta_texto1, preguntaActual.respuesta_texto2, preguntaActual.respuesta_texto3, preguntaActual.respuesta_texto4]; let i = index" (click)="answer(preguntaActualIndex, respuesta)" [class.disabled]="preguntasSeleccionadas[currentQuestionIndex]">
+                            <div appChangeBg class="card" [isCorrect]="checkAnswer(respuesta)">
+                                {{ respuesta }}
+                            </div>
+                        </li>
+                    </ol>
+                    }
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button [disabled]="currentQuestionIndex===0" class="btn" (click)="previousQuestion()"><i
+                            class="fa text-primary fa-chevron-left fa-3x" aria-hidden="true"></i></button>
+                    <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedQuestionIndex" (change)="goToQuestion()">
+                        <option *ngFor="let pregunta of preguntas; let i = index" [value]="i">{{ 'Pregunta ' + (i + 1) }}</option>
+                    </select>
+                    <!-- <button class="btn" (click)="resetQuiz()"><i class="fa fa-refresh text-primary fa-3x"
+                            aria-hidden="true"></i></button> -->
+                    <button [disabled]="shouldDisableNextButton()" class="btn"
+                        (click)="nextQuestion()"><i class="fa text-primary fa-chevron-right fa-3x"
+                            aria-hidden="true"></i></button>
+                </div>
+            </ng-container>
+            } @if(isQuizCompleted){
+            <ng-container>
+                <div class="row d-flex justify-content-between">
+                    <img style="width: 50%;" class="img-fluid col-sm-12 mx-auto"
+                        src="https://icon-library.com/images/celebration-icon-png/celebration-icon-png-7.jpg" alt="">
+                    <div class="result text-center col-md-6 col-sm-12">
+                        <h3>¡¡Felicidades!! <br>Has completado el simulacro <br>A continuación se muestra su resultado:
+                        </h3>
+                        <p>Total de preguntas: {{preguntas.length}} </p>
+                        <p>Total de respuestas correctas : {{correctAnswer}} </p>
+                        <p>Total de respuestas incorrectas : {{inCorrectAnswer}} </p>
+                        <p>Tu puntuación : {{points}} Puntos </p>
+                    </div>
+                </div>
+            </ng-container>
+            }
+
+
+
+
+        </div>
+    </div>
+</section>

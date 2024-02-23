@@ -119,6 +119,7 @@ export default class RegistroComponent {
     //   // Llama al método registerUser del servicio BackendUserService
     const userData = {
       usuario_nombre: this.formRegister.value.names,
+      usuario_apellido: this.formRegister.value.lastNames,
       usuario_correo: this.formRegister.value.email,
       //     // Aquí puedes agregar más campos si es necesario
     };
