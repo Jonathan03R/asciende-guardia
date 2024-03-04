@@ -6,6 +6,7 @@ import { AlertasService } from '../../services/alertas.service';
 import { RouterOutlet } from '@angular/router';
 import {  SlickCarouselModule } from 'ngx-slick-carousel';
 import ExamenComponent from '../examen/examen.component';
+import ExamenRealComponent from '../../examenes/ExamenReal/ExamenReal.component';
 
 declare var bootbox:any;
 
@@ -16,7 +17,8 @@ declare var bootbox:any;
     FormsModule,
     SlickCarouselModule,
     RouterOutlet,
-    ExamenComponent
+    ExamenComponent,
+    ExamenRealComponent
   ],
   templateUrl: './practicar.component.html',
   styleUrl: './practicar.component.css'
@@ -27,7 +29,7 @@ export default class PracticarComponent {
   private temasService = inject(TemasService)
 
   items: any[] = [];
-  examen:boolean = true;
+  examen:boolean = false;
 
   ComenzarExamen(){
     this.examen = false;

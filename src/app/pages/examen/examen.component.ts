@@ -145,9 +145,6 @@ export default class ExamenComponent implements OnInit {
       .subscribe(val => {
         this.counter--;
         if (this.counter === 0) {
-          this.currentQuestionIndex++;
-          this.preguntaActualIndex++;
-          this.preguntaActual = this.preguntas[this.currentQuestionIndex];
           this.counter = 10;
           this.points -= 10;
         }
@@ -172,7 +169,6 @@ export default class ExamenComponent implements OnInit {
     this.resetCounter();
     this.points = 0;
     this.counter = 60;
-    this.currentQuestionIndex = 0;
     this.progress = "0";
 
   }

@@ -10,14 +10,12 @@ export class QuestionService {
 
   constructor(private http: HttpClient) { }
 
-  getQuestionJson() {
-    return this.http.get<any>("../../../assets/questions.json");
-  }
-
 
   getRandomQuestions(): Observable<any[]> {
     return this.http.get<any[]>(`${BASE_URL}/questions/random-questions`);
   }
+
+  
   private examen: boolean = true;
 
   comenzarExamen() {
