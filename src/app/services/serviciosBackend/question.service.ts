@@ -15,6 +15,11 @@ export class QuestionService {
     return this.http.get<any[]>(`${BASE_URL}/questions/random-questions`);
   }
 
+
+  getGenerateExamen(): Observable<any[]> {
+    return this.http.get<any[]>(`${BASE_URL}/questions/real-exam`)
+  }
+
   
   private examen: boolean = true;
 

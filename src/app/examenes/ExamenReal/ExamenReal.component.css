@@ -1,3 +1,33 @@
 #examenGeneral {
   padding-top: 67px;
 }
+
+.boxIndex{
+  padding: 5px;
+}
+
+.preguntaIndex{
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.answered {
+  border-radius: 50%;
+  background-color: rgba(255, 0, 0, 0.63);
+}
+
+button{
+  width: 150px;
+  height: 30px;
+}
+span{
+  color: #376cbb;
+  font-weight: bold;
+}
+
+.respuestas span{
+  font-size: 15px;
+} 

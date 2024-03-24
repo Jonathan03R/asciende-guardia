@@ -1,18 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import ExamenRealComponent from '../../examenes/ExamenReal/ExamenReal.component';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [],
+  imports: [
+    ExamenRealComponent
+  ],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
 export default class InicioComponent {
   private _router = inject(Router);
-
+  examenReal: boolean = true;
   redirectToPractica() {
-    this._router.navigate(['/dash/practica']);
+    if(this.examenReal){
+      this.examenReal= false;
+    }
   }
 
   items = [

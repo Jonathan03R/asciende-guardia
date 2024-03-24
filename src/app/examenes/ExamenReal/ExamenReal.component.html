@@ -3,16 +3,18 @@
     <div class="row mr-2 ml-4">
         <div class="col-12 border-top border-bottom border-primary">
             <p class="text-end m-2">
-                Usuario user...............
+                Usuario {{name}}
             </p>
         </div>
         <div class="col-3 p-0">
-            <div class="row m-2 border">
-                @for (numero of numeros; track $index) {
-                <div class="col-3">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                        value="option1" [checked]="numero">
-                    <label class="form-check-label" for="exampleRadios1"> {{numero}} </label>
+            <div class="row m-2 border boxIndex ">
+                @for (questionNumber of questionNumbers; track $index) {
+                <div class="col-3 d-flex">
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios{{$index}}"
+                        value="{{$index}}" [checked]="$index === selectedQuestionIndex "
+                        (click)="selectQuestion($index)">
+                    <label class="form-check-label preguntaIndex" [ngClass]="{'answered': selectedAnswers[$index]} "
+                        for="exampleRadios{{$index}}"> {{questionNumber}} </label>
                 </div>
                 }
             </div>
@@ -24,48 +26,62 @@
             <div class="row m-2 ">
 
                 <div class="col-12 d-flex justify-content-between align-item-center border-bottom border-primary ">
-                    <p class="m-0"><span>01:59:53 </span>creo que aqui va el tema :D</p>
+                    <p class="m-0"><span>{{ displayTime$ | async }} </span>tema numero: {{questions[selectedQuestionIndex]?.tema_id}}</p>
                     <button class="mb-2">Finalizar examen</button>
                 </div>
+
                 <div class="col-12  border-bottom border-primary ">
-                    <h6 class="mt-2 mb-2">1: TODA PERSONA TIENE DERECHO A CONTRAAR CON FOLSIJMFF SKDS</h6>
+                    <h6 class="mt-2 mb-2">{{questions[selectedQuestionIndex]?.pregunta_enunciado}} El Id de la pregnta:
+                        {{questions[selectedQuestionIndex]?.pregunta_id}} el tema :
+                        {{questions[selectedQuestionIndex]?.tema_id}}</h6>
                 </div>
+
                 <div class="col-12  border-bottom border-primary ">
 
                     <div class="d-flex flex-column">
                         <div>
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                value="option1">
-                            <label class="form-check-label" for="exampleRadios1"> A. alternativa 1 </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
+                                id="exampleRadios1" value="option1"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                            <label class="form-check-label" for="exampleRadios1">
+                                {{questions[selectedQuestionIndex]?.respuesta_texto1}} </label>
                         </div>
                         <div>
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                value="option1">
-                            <label class="form-check-label" for="exampleRadios1"> B. alternativa 1 </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
+                                id="exampleRadios2" value="option2"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                            <label class="form-check-label" for="exampleRadios2">
+                                {{questions[selectedQuestionIndex]?.respuesta_texto2}} </label>
                         </div>
                         <div>
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                value="option1">
-                            <label class="form-check-label" for="exampleRadios1"> C. alternativa 1 </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
+                                id="exampleRadios3" value="option3"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                            <label class="form-check-label" for="exampleRadios3">
+                                {{questions[selectedQuestionIndex]?.respuesta_texto3}} </label>
                         </div>
                         <div>
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                value="option1">
-                            <label class="form-check-label" for="exampleRadios1"> D. alternativa 1 </label>
-                        </div>
-                        <div>
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                value="option1">
-                            <label class="form-check-label" for="exampleRadios1"> E. alternativa 1 </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
+                                id="exampleRadios4" value="option4"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                            <label class="form-check-label" for="exampleRadios4">
+                                {{questions[selectedQuestionIndex]?.respuesta_texto4}} </label>
                         </div>
                         <div class="d-flex justify-content-between mb-1">
-                            <button>Borrar respuestas</button>
+                            <button (click)="borrarRespuesta()">Borrar respuestas</button>
                             <button>Ver instrucciones</button>
                         </div>
 
                     </div>
                 </div>
-                <p class="mt-2">PREGUNTAS CONTESTADAS: 0, PREGUNTAS SIN CONTESTAR: 100</p>
+                <p class="mt-2">PREGUNTAS CONTESTADAS: {{ preguntasContestadas }}, PREGUNTAS SIN CONTESTAR: {{
+                    preguntasSinContestar }}</p>
+
+                <div class="respuestas d-flex">
+                    @for (respuesta of respuestasSeleccionadas; track $index) {
+                        <span>{{respuesta}}</span>
+                    }
+                </div>
 
             </div>
         </div>

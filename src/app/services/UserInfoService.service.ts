@@ -8,12 +8,20 @@ export class UserInfoServiceService {
 
   constructor() { }
 
-  setUserInfo(userInfo: any) {
-    this.userInfo = userInfo;
+  // setUserInfo(userInfo: any) {
+  //   this.userInfo = userInfo;
+  // }
+
+  // getUserInfo() {
+  //   return this.userInfo;
+  // }
+  setUserInfo(userInfo: any){
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
   }
 
-  getUserInfo() {
-    return this.userInfo;
+  getUserInfo(){
+    const userInfo = localStorage.getItem('userInfo');
+    return userInfo ? JSON.parse(userInfo): null;
   }
 
 }

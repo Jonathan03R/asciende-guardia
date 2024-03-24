@@ -29,7 +29,7 @@ export default class PracticarComponent {
   private temasService = inject(TemasService)
 
   items: any[] = [];
-  examen:boolean = false;
+  examen:boolean = true;
 
   ComenzarExamen(){
     this.examen = false;
