@@ -1,5 +1,37 @@
 <div id="examenGeneral" class=" container-fluid ">
-
+    @if (!politicaSprivacidad) {
+    <div class=" border-top border-bottom border-primary">
+        <p class="text-end m-2">
+            Usuario {{name}} 
+        </p>
+    </div>
+    <div class="container">
+        <p class="pt-5"><strong>Estimados(a) Usuarios(a):</strong></p>
+        <P>Usted se encuentra en el Módulo de Examen Virtual del Sistema de Evaluación del Conocimiento Policial
+            (versión Buhooleans). Este es una réplica del examen de (SIECOPOL), el cual ha sido desarrollado con la
+            finalidad de generar un único examen para cada postulante a partir del Banco de Preguntas válidas
+            seleccionadas para el presente proceso de evaluación, considerando su grado y especialidad.
+        </P>
+        <p><strong>Instrucciones</strong></p>
+        <ul>
+            <li>Para ver la pregunta debe seleccionarla haciendo click en el número del tablero ubicado a la izquierda
+                de la pantalla. </li>
+            <li>Conteste la pregunta haciendo click en la letra o el texto de la alternativa que considere correcta.
+            </li>
+            <li>Puede regresar a una pregunta ya contestada cambiar la alternativa seleccionada o borrar la respuesta
+                para ser contestada posteriormente. </li>
+            <li>Si deseas puede finalizar el examen antes de cumplirse el tiempo de duración establecido</li>
+        </ul>
+        <p><strong>Nota</strong></p>
+        <p>Este simulacro, meticulosamente diseñado por Buhooleans Innovations, se asemeja lo más posible a un examen
+            real. Nuestro objetivo
+            es prepararte adecuadamente y garantizar tu ascenso.
+        </p>
+        <div class="d-flex justify-content-center align-items-center mt-5" >
+            <button (click)="mostrarExamen()" class="boton-examen" >Generar Examen Virtual</button>
+        </div>
+    </div>
+    }@else {
     <div class="row mr-2 ml-4">
         <div class="col-12 border-top border-bottom border-primary">
             <p class="text-end m-2">
@@ -18,15 +50,13 @@
                 </div>
                 }
             </div>
-
-
-
         </div>
         <div class="col-9 p-0 ">
             <div class="row m-2 ">
 
                 <div class="col-12 d-flex justify-content-between align-item-center border-bottom border-primary ">
-                    <p class="m-0"><span>{{ displayTime$ | async }} </span>tema numero: {{questions[selectedQuestionIndex]?.tema_id}}</p>
+                    <p class="m-0"><span>{{ displayTime$ | async }} </span>tema numero:
+                        {{questions[selectedQuestionIndex]?.tema_id}}</p>
                     <button class="mb-2">Finalizar examen</button>
                 </div>
 
@@ -43,28 +73,28 @@
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
                                 id="exampleRadios1" value="option1"
                                 [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
-                            <label class="form-check-label" for="exampleRadios1">
+                            <label class="form-check-label" for="exampleRadios1"> A: 
                                 {{questions[selectedQuestionIndex]?.respuesta_texto1}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
                                 id="exampleRadios2" value="option2"
-                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
-                            <label class="form-check-label" for="exampleRadios2">
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"> 
+                            <label class="form-check-label" for="exampleRadios2"> B:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto2}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
                                 id="exampleRadios3" value="option3"
                                 [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
-                            <label class="form-check-label" for="exampleRadios3">
+                            <label class="form-check-label" for="exampleRadios3"> C:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto3}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
                                 id="exampleRadios4" value="option4"
                                 [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
-                            <label class="form-check-label" for="exampleRadios4">
+                            <label class="form-check-label" for="exampleRadios4"> D:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto4}} </label>
                         </div>
                         <div class="d-flex justify-content-between mb-1">
@@ -79,12 +109,14 @@
 
                 <div class="respuestas d-flex">
                     @for (respuesta of respuestasSeleccionadas; track $index) {
-                        <span>{{respuesta}}</span>
+                    <span>{{respuesta}}</span>
                     }
                 </div>
 
             </div>
         </div>
     </div>
+
+    }
 
 </div>

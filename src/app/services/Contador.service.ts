@@ -14,10 +14,10 @@ export class ContadorService {
   startTimer(durationInSeconds: number): Observable<string> {
     this.timeLeft = durationInSeconds;
     return timer(0, 1000).pipe(
-      takeUntil(this.interval$),
+      takeUntil(this.interval$ ),
       map(() => {
         if (this.timeLeft > 0) {
-          this.timeLeft--;
+          this.timeLeft--; // Reducir el tiempo restante en cada iteración del temporizador
         }
         return this.convertSecondsToTime(this.timeLeft);
       })

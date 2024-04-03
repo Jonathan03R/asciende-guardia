@@ -2,6 +2,11 @@
   padding-top: 67px;
 }
 
+.boton-examen{
+  width: 240px;
+  border: 1px solid #000;
+}
+
 .boxIndex{
   padding: 5px;
 }

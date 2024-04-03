@@ -7,7 +7,9 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { provideHttpClient } from '@angular/common/http';
 
 
-export const BASE_URL = 'http://localhost:8080';
+// export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL = 'http://192.168.10.18:8080';
+
 
 
 export const appConfig: ApplicationConfig = {

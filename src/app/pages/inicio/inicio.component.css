@@ -28,7 +28,7 @@ p {
   font-size: 18px;
 }
 
-.btn {
+.btn-custom {
   display: inline-block;
   font-weight: bold;
   color: #000000;
@@ -46,7 +46,7 @@ p {
   box-shadow: 1px 1px 12px #000000;
 }
 
-.btn::before {
+.btn-custom::before {
   content: "";
   width: 100%;
   height: 100%;
@@ -59,12 +59,12 @@ p {
   z-index: -1;
 }
 
-.btn:hover {
+.btn-custom:hover {
   color: #ffffff;
   transition: all .3s ease;
 }
 
-.btn:hover::before {
+.btn-custom:hover::before {
   transform: translateX(0);
 }
 

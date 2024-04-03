@@ -39,9 +39,9 @@ export default class ExamenComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.startCounter();
     this.inicializarUsuario();
     this.obtenerPreguntasAleatorias();
+    this.startCounter();
   }
 
   // obtener el nombre del usuario actual
@@ -109,7 +109,7 @@ export default class ExamenComponent implements OnInit {
 
 
   answer(currentQno: number, selectedAnswer: string) {
-    
+
     if (this.preguntasSeleccionadas[this.currentQuestionIndex]) {
       this.currentQuestionIndex++;
       this.preguntaActualIndex++;
@@ -120,6 +120,7 @@ export default class ExamenComponent implements OnInit {
     const isCorrect = this.checkAnswer(selectedAnswer);
     if (currentQno === this.preguntas.length) {
       this.isQuizCompleted = true;
+      console.log("Cuestionario completado. Deteniendo el contador...");
       this.stopCounter();
     }
     if (isCorrect) {
@@ -141,22 +142,23 @@ export default class ExamenComponent implements OnInit {
 
 
   startCounter() {
-    this.interval$ = interval(1000)
-      .subscribe(val => {
-        this.counter--;
-        if (this.counter === 0) {
-          this.counter = 10;
-          this.points -= 10;
-        }
-      });
-    setTimeout(() => {
-      this.interval$.unsubscribe();
-    }, 600000);
+    if (!this.isQuizCompleted) { // Agrega esta verificación
+      this.interval$ = interval(1000)
+        .subscribe(val => {
+          this.counter--;
+          if (this.counter === 0) {
+            this.counter = 10;
+            this.points -= 10;
+          }
+        });
+      setTimeout(() => {
+        this.interval$.unsubscribe();
+      }, 600000);
+    }
   }
 
   stopCounter() {
     this.interval$.unsubscribe();
-    this.counter = 0;
   }
 
   resetCounter() {

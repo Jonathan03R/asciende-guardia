@@ -4,7 +4,7 @@ import { QuestionService } from '../../services/serviciosBackend/question.servic
 import { FormsModule } from '@angular/forms';
 import { UserInfoServiceService } from '../../services/UserInfoService.service';
 import { ContadorService } from '../../services/Contador.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, map, takeUntil, timer } from 'rxjs';
 
 @Component({
   selector: 'app-examen-real',
@@ -18,16 +18,21 @@ import { Observable, Subscription } from 'rxjs';
 })
 export default class ExamenRealComponent implements OnInit, OnDestroy {
 
+  // Variables para almacenar datos del examen
   questionNumbers: any[] = [];
   questions: any[] = [];
   selectedQuestionIndex: number = 0;
   selectedAnswers: (string | null)[] = [];
   respuestasSeleccionadas: string[] = [];
   public name: string = "";
+  politicaSprivacidad: boolean = false;
 
+  // Variable para mostrar el tiempo restante en el examen
   displayTime$: Observable<string> | undefined;
   private timerSubscription: Subscription | undefined;
 
+
+  // Servicios inyectados
   private questionService = inject(QuestionService);
   private userInfoService = inject(UserInfoServiceService);
   private contadorService = inject(ContadorService);
@@ -37,7 +42,6 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     this.inicializarSelectedAnswers();
     this.ordenarRespuestasSeleccionadas();
     this.inicializarUsuario();
-    this.startTimer();
   }
   ngOnDestroy() {
     if (this.timerSubscription) {
@@ -45,23 +49,56 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
   }
 
-  startTimer(): void {
-    const durationInSeconds = 7200; // 2 horas
-    this.displayTime$ = this.contadorService.startTimer(durationInSeconds);
-    this.timerSubscription = this.displayTime$.subscribe(time => {
-      if (time === '00:00:00') {
-        this.showAlert();
-        if (this.timerSubscription) {
-          this.timerSubscription.unsubscribe();
-        }
-      }
-    });
+  // Método para iniciar el examen y el temporizador
+  mostrarExamen() {
+    this.politicaSprivacidad = true;
+    this.startTimer();
   }
 
+  // Métodos para el temporizador
+  private timeLeft: number = 7200; // Duración en segundos (2 horas)
+  private destroy$ = new Subject<void>();
+  startTimer(): void {
+    this.displayTime$ = timer(0, 1000).pipe(
+      takeUntil(this.destroy$),
+      map(() => {
+        if (this.timeLeft > 0) {
+          this.timeLeft--; // Reducir el tiempo restante en cada iteración del temporizador
+        } else {
+          this.stopTimer();
+          alert('tiempo terminado') // Detener el temporizador cuando el tiempo llega a cero
+        }
+        return this.convertSecondsToTime(this.timeLeft);
+      })
+    );
+  }
+
+
+  stopTimer(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+  }
+
+  private convertSecondsToTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${this.formatTimeUnit(hours)}:${this.formatTimeUnit(minutes)}:${this.formatTimeUnit(remainingSeconds)}`;
+  }
+
+  private formatTimeUnit(unit: number): string {
+    return unit < 10 ? `0${unit}` : `${unit}`;
+  }
+
+  // Método para mostrar una alerta cuando el tiempo termina
   showAlert(): void {
     alert('¡El tiempo ha expirado!');
   }
-  
+
+  // Método para inicializar el nombre de usuario
   inicializarUsuario() {
     // Obtener la información del usuario del servicio
     const userInfo = this.userInfoService.getUserInfo();
@@ -71,9 +108,12 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Método para inicializar las respuestas seleccionadas
   private inicializarSelectedAnswers(): void {
     this.selectedAnswers = Array.from({ length: this.questionNumbers.length }, () => '');
   }
+
+  // Método para calcular las respuestas seleccionadas
   calcularRespuestasSeleccionadas(): void {
     this.respuestasSeleccionadas = [];
     for (let i = 0; i < this.selectedAnswers.length; i++) {
@@ -109,10 +149,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
         }
       }
     }
+    
   }
 
 
-
+  // Método para obtener las preguntas del examen de la bd
   getExamQuestions(): void {
     this.questionService.getGenerateExamen().subscribe(
       (questions: any[]) => {
@@ -132,6 +173,7 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Método para generar los números de las preguntas
   selectQuestion(index: number): void {
     this.selectedQuestionIndex = index;
     console.log(index)
@@ -139,13 +181,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       // Si no hay una selección previa, inicializarla con una cadena vacía
       this.selectedAnswers[index] = '';
     }
-
     console.log(this.selectedAnswers);
-
-
     this.calcularRespuestasSeleccionadas();
   }
 
+  // Método para borrar una respuesta
 
   borrarRespuesta(): void {
     // Establece la respuesta seleccionada de la pregunta actual como null
@@ -155,7 +195,7 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   }
 
 
-  //DETERMINAR PREGUNTAS MARCADAS Y ALS QUE ESTAN DESMARCARDAS
+  /// Método para determinar las preguntas contestadas
   get preguntasContestadas(): number {
     return this.selectedAnswers.filter(answer => answer !== null).length;
   }

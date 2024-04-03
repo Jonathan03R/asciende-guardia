@@ -33,3 +33,23 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+
+
+
+.box button {
+  border-radius: 15px;
+  height: 80%;
+  width: 80%;
+  border: 2px solid #084762;
+  background-color: #084762;
+  color: white;
+  font-weight: bold;
+  transition: all 0.5s;
+}
+
+.box button:hover{
+  transform: scale(1.05);
+  color: #084762;
+  background-color: transparent;
+}
+
