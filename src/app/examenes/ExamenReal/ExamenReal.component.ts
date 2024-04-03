@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { QuestionService } from '../../services/serviciosBackend/question.service';
 import { FormsModule } from '@angular/forms';
 import { UserInfoServiceService } from '../../services/UserInfoService.service';
-import { ContadorService } from '../../services/Contador.service';
 import { Observable, Subject, Subscription, map, takeUntil, timer } from 'rxjs';
+import { ExamenRealService } from './Exam.service';
 
 @Component({
   selector: 'app-examen-real',
@@ -27,6 +27,9 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   public name: string = "";
   politicaSprivacidad: boolean = false;
 
+
+  
+
   // Variable para mostrar el tiempo restante en el examen
   displayTime$: Observable<string> | undefined;
   private timerSubscription: Subscription | undefined;
@@ -35,21 +38,30 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   // Servicios inyectados
   private questionService = inject(QuestionService);
   private userInfoService = inject(UserInfoServiceService);
-  private contadorService = inject(ContadorService);
+  private examenRealService = inject(ExamenRealService);
 
+  /**
+   * Inicializa el componente.
+   */
   ngOnInit(): void {
     this.getExamQuestions();
     this.inicializarSelectedAnswers();
     this.ordenarRespuestasSeleccionadas();
     this.inicializarUsuario();
   }
+
+  /**
+   * Limpia los recursos cuando el componente es destruido.
+   */
   ngOnDestroy() {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
   }
 
-  // Método para iniciar el examen y el temporizador
+  /**
+   * Muestra el examen y activa el temporizador.
+   */
   mostrarExamen() {
     this.politicaSprivacidad = true;
     this.startTimer();
@@ -58,6 +70,10 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   // Métodos para el temporizador
   private timeLeft: number = 7200; // Duración en segundos (2 horas)
   private destroy$ = new Subject<void>();
+
+  /**
+   * Inicia el temporizador.
+   */
   startTimer(): void {
     this.displayTime$ = timer(0, 1000).pipe(
       takeUntil(this.destroy$),
@@ -66,14 +82,16 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
           this.timeLeft--; // Reducir el tiempo restante en cada iteración del temporizador
         } else {
           this.stopTimer();
-          alert('tiempo terminado') // Detener el temporizador cuando el tiempo llega a cero
+          alert('¡Tiempo terminado!'); // Detener el temporizador cuando el tiempo llega a cero
         }
-        return this.convertSecondsToTime(this.timeLeft);
+        return this.examenRealService.convertSecondsToTime(this.timeLeft);
       })
     );
   }
 
-
+  /**
+   * Detiene el temporizador.
+   */
   stopTimer(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -82,23 +100,16 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
   }
 
-  private convertSecondsToTime(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${this.formatTimeUnit(hours)}:${this.formatTimeUnit(minutes)}:${this.formatTimeUnit(remainingSeconds)}`;
-  }
-
-  private formatTimeUnit(unit: number): string {
-    return unit < 10 ? `0${unit}` : `${unit}`;
-  }
-
-  // Método para mostrar una alerta cuando el tiempo termina
+  /**
+   * Muestra una alerta cuando el tiempo termina.
+   */
   showAlert(): void {
     alert('¡El tiempo ha expirado!');
   }
 
-  // Método para inicializar el nombre de usuario
+  /**
+   * Inicializa el nombre de usuario.
+   */
   inicializarUsuario() {
     // Obtener la información del usuario del servicio
     const userInfo = this.userInfoService.getUserInfo();
@@ -108,52 +119,23 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Método para inicializar las respuestas seleccionadas
+  /**
+   * Inicializa las respuestas seleccionadas.
+   */
   private inicializarSelectedAnswers(): void {
     this.selectedAnswers = Array.from({ length: this.questionNumbers.length }, () => '');
   }
 
-  // Método para calcular las respuestas seleccionadas
+  /**
+   * Calcula las respuestas seleccionadas.
+   */
   calcularRespuestasSeleccionadas(): void {
-    this.respuestasSeleccionadas = [];
-    for (let i = 0; i < this.selectedAnswers.length; i++) {
-      const answer = this.selectedAnswers[i];
-      if (answer) {
-        let letra = '';
-        switch (answer) {
-          case 'option1':
-            letra = 'A';
-            break;
-          case 'option2':
-            letra = 'B';
-            break;
-          case 'option3':
-            letra = 'C';
-            break;
-          case 'option4':
-            letra = 'D';
-            break;
-          default:
-            letra = '';
-        }
-        // Construir la cadena de respuesta
-        const respuesta = (i + 1) + letra;
-
-        // Verificar si es la primera respuesta de la lista
-        if (this.respuestasSeleccionadas.length === 0) {
-          // Si es la primera, simplemente la agregamos
-          this.respuestasSeleccionadas.push(respuesta);
-        } else {
-          // Si no es la primera, agregamos una coma antes de agregar la respuesta
-          this.respuestasSeleccionadas.push(', ' + respuesta);
-        }
-      }
-    }
-    
+    this.respuestasSeleccionadas = this.examenRealService.calcularRespuestasSeleccionadas(this.selectedAnswers);
   }
 
-
-  // Método para obtener las preguntas del examen de la bd
+  /**
+   * Obtiene las preguntas del examen de la base de datos.
+   */
   getExamQuestions(): void {
     this.questionService.getGenerateExamen().subscribe(
       (questions: any[]) => {
@@ -166,6 +148,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Genera los números de las preguntas.
+   * @param numQuestions El número total de preguntas.
+   * @returns Un array de cadenas que representan los números de las preguntas.
+   */
   generateQuestionNumbers(numQuestions: number): string[] {
     return Array.from({ length: numQuestions }, (_, index) => {
       const number = index + 1;
@@ -173,7 +160,10 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Método para generar los números de las preguntas
+  /**
+   * Selecciona una pregunta.
+   * @param index El índice de la pregunta seleccionada.
+   */
   selectQuestion(index: number): void {
     this.selectedQuestionIndex = index;
     console.log(index)
@@ -182,25 +172,30 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       this.selectedAnswers[index] = '';
     }
     console.log(this.selectedAnswers);
-    this.calcularRespuestasSeleccionadas();
+    this.respuestasSeleccionadas = this.examenRealService.calcularRespuestasSeleccionadas(this.selectedAnswers);
   }
 
-  // Método para borrar una respuesta
-
+  /**
+   * Borra una respuesta.
+   */
   borrarRespuesta(): void {
     // Establece la respuesta seleccionada de la pregunta actual como null
     this.selectedAnswers[this.selectedQuestionIndex] = null;
     this.calcularRespuestasSeleccionadas();
-
   }
 
-
-  /// Método para determinar las preguntas contestadas
+  /**
+   * Obtiene el número de preguntas contestadas.
+   * @returns El número de preguntas contestadas.
+   */
   get preguntasContestadas(): number {
     return this.selectedAnswers.filter(answer => answer !== null).length;
   }
 
-  // Contar las preguntas que aún no han sido contestadas (es decir, cuyas respuestas son null)
+  /**
+   * Obtiene el número de preguntas que aún no han sido contestadas.
+   * @returns El número de preguntas sin contestar.
+   */
   get preguntasSinContestar(): number {
     return this.questionNumbers.reduce((count, _, index) => {
       if (!this.selectedAnswers[index]) {
@@ -211,6 +206,9 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  /**
+   * Ordena las respuestas seleccionadas.
+   */
   ordenarRespuestasSeleccionadas(): void {
     // Filtrar las respuestas vacías y ordenar las respuestas seleccionadas únicas por índice
     const uniqueResponses = Array.from(new Set(this.respuestasSeleccionadas.filter(respuesta => respuesta !== '')));
@@ -221,7 +219,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  /**
+   * Determina si se debe agregar una coma antes de la respuesta en la lista.
+   * @param index El índice de la respuesta.
+   * @returns Verdadero si se debe agregar una coma, falso en caso contrario.
+   */
   shouldAddComma(index: number): boolean {
     // Verificar si la respuesta actual es consecutiva a la anterior
     if (index > 0) {
@@ -232,7 +234,4 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
     return false;
   }
-
-
-
-}  
+}
