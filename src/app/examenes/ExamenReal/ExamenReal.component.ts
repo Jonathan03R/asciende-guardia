@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UserInfoServiceService } from '../../services/UserInfoService.service';
 import { Observable, Subject, Subscription, map, takeUntil, timer } from 'rxjs';
 import { ExamenRealService } from './Exam.service';
+import { RespuestasService } from '../../services/serviciosBackend/respuestas.service';
 
 @Component({
   selector: 'app-examen-real',
@@ -23,12 +24,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   questions: any[] = [];
   selectedQuestionIndex: number = 0;
   selectedAnswers: (string | null)[] = [];
-  respuestasSeleccionadas: string[] = [];
-  public name: string = "";
-  politicaSprivacidad: boolean = false;
-
-
-  
+  selectedAnswerTexts: string[ ] = [];
+  selectedResponses: string[] = [];
+  public userName: number = 0;
+  public userId: string = "";
+  privacyPolicy: boolean = false;
 
   // Variable para mostrar el tiempo restante en el examen
   displayTime$: Observable<string> | undefined;
@@ -39,15 +39,16 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   private questionService = inject(QuestionService);
   private userInfoService = inject(UserInfoServiceService);
   private examenRealService = inject(ExamenRealService);
+  private respuestasService = inject(RespuestasService);
 
   /**
    * Inicializa el componente.
    */
   ngOnInit(): void {
-    this.getExamQuestions();
+    this.loadExamQuestions();
     this.inicializarSelectedAnswers();
-    this.ordenarRespuestasSeleccionadas();
-    this.inicializarUsuario();
+    this.orderSelectedResponses();
+    this.initializeUserName();
   }
 
   /**
@@ -63,7 +64,7 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
    * Muestra el examen y activa el temporizador.
    */
   mostrarExamen() {
-    this.politicaSprivacidad = true;
+    this.privacyPolicy = true;
     this.startTimer();
   }
 
@@ -110,12 +111,13 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el nombre de usuario.
    */
-  inicializarUsuario() {
+  initializeUserName() {
     // Obtener la información del usuario del servicio
     const userInfo = this.userInfoService.getUserInfo();
     // Si la información existe y tiene el campo de nombre
     if (userInfo && userInfo.usuario_nombre) {
-      this.name = userInfo.usuario_nombre;
+      this.userName = userInfo.usuario_nombre;
+      this.userId = userInfo.usuario_id;
     }
   }
 
@@ -129,15 +131,18 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   /**
    * Calcula las respuestas seleccionadas.
    */
-  calcularRespuestasSeleccionadas(): void {
-    this.respuestasSeleccionadas = this.examenRealService.calcularRespuestasSeleccionadas(this.selectedAnswers);
+  calculateSelectedResponses(): void {
+    this.selectedResponses = this.examenRealService.calculateSelectedResponses(this.selectedAnswers);
   }
 
   /**
    * Obtiene las preguntas del examen de la base de datos.
    */
-  getExamQuestions(): void {
-    this.questionService.getGenerateExamen().subscribe(
+
+  
+  loadExamQuestions(): void {
+    const userInfo = this.userInfoService.getUserInfo();
+    this.questionService.getGenerateExamen(userInfo.usuario_id).subscribe(
       (questions: any[]) => {
         this.questions = questions;
         this.questionNumbers = this.generateQuestionNumbers(this.questions.length);
@@ -161,28 +166,81 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Selecciona una pregunta.
+   * Selecciona una pregunta del examen y actualiza las respuestas seleccionadas.
    * @param index El índice de la pregunta seleccionada.
    */
   selectQuestion(index: number): void {
     this.selectedQuestionIndex = index;
-    console.log(index)
-    if (this.selectedAnswers[index] === null) {
-      // Si no hay una selección previa, inicializarla con una cadena vacía
-      this.selectedAnswers[index] = '';
+    let selectedAnswer = this.selectedAnswers[index];
+    if (!selectedAnswer) {
+      selectedAnswer = null;
     }
-    console.log(this.selectedAnswers);
-    this.respuestasSeleccionadas = this.examenRealService.calcularRespuestasSeleccionadas(this.selectedAnswers);
+    const answerText = selectedAnswer !== null ? this.getAnswerText(selectedAnswer) : '';
+    this.selectedAnswerTexts[index] = answerText;
+  
+    // mensajes para depurar , es decir ver que me retorna y si es correcto
+    console.log('Índice de pregunta seleccionada:', index);
+    console.log('Respuestas seleccionadas:', this.selectedAnswers);
+    console.log('Preguntas seleccionadas:', this.selectedAnswerTexts);
+    this.selectedResponses = this.examenRealService.calculateSelectedResponses(this.selectedAnswers);
+  }
+
+
+  // Método para obtener el texto de la opción seleccionada
+  getAnswerText(answerValue: string): string {
+    const question = this.questions[this.selectedQuestionIndex];
+    switch (answerValue) {
+      case 'option1':
+        return question.respuesta_texto1;
+      case 'option2':
+        return question.respuesta_texto2;
+      case 'option3':
+        return question.respuesta_texto3;
+      case 'option4':
+        return question.respuesta_texto4;
+      default:
+        return ''; // Manejar el caso de valor no válido, si es necesario
+    }
   }
 
   /**
    * Borra una respuesta.
    */
-  borrarRespuesta(): void {
+  deleteResponse(): void {
     // Establece la respuesta seleccionada de la pregunta actual como null
     this.selectedAnswers[this.selectedQuestionIndex] = null;
-    this.calcularRespuestasSeleccionadas();
+    this.calculateSelectedResponses();
   }
+
+  /**
+   * Ordena las respuestas seleccionadas.
+   */
+  orderSelectedResponses(): void {
+    // Filtrar las respuestas vacías y ordenar las respuestas seleccionadas únicas por índice
+    const uniqueResponses = Array.from(new Set(this.selectedResponses.filter(respuesta => respuesta !== '')));
+    this.selectedResponses = uniqueResponses.sort((a, b) => {
+      const indexA = parseInt(a.substring(0, a.length - 1));
+      const indexB = parseInt(b.substring(0, b.length - 1));
+      return indexA - indexB;
+    });
+  }
+
+  /**
+   * Determina si se debe agregar una coma antes de la respuesta en la lista.
+   * @param index El índice de la respuesta.
+   * @returns Verdadero si se debe agregar una coma, falso en caso contrario.
+   */
+  shouldAddComma(index: number): boolean {
+    // Verificar si la respuesta actual es consecutiva a la anterior
+    if (index > 0) {
+      const prevResponseIndex = parseInt(this.selectedResponses[index - 1]);
+      if (prevResponseIndex === index - 1) {
+        return true; // Agregar coma si la respuesta actual es consecutiva a la anterior
+      }
+    }
+    return false;
+  }
+
 
   /**
    * Obtiene el número de preguntas contestadas.
@@ -204,34 +262,5 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       }
       return count;
     }, 0);
-  }
-
-  /**
-   * Ordena las respuestas seleccionadas.
-   */
-  ordenarRespuestasSeleccionadas(): void {
-    // Filtrar las respuestas vacías y ordenar las respuestas seleccionadas únicas por índice
-    const uniqueResponses = Array.from(new Set(this.respuestasSeleccionadas.filter(respuesta => respuesta !== '')));
-    this.respuestasSeleccionadas = uniqueResponses.sort((a, b) => {
-      const indexA = parseInt(a.substring(0, a.length - 1));
-      const indexB = parseInt(b.substring(0, b.length - 1));
-      return indexA - indexB;
-    });
-  }
-
-  /**
-   * Determina si se debe agregar una coma antes de la respuesta en la lista.
-   * @param index El índice de la respuesta.
-   * @returns Verdadero si se debe agregar una coma, falso en caso contrario.
-   */
-  shouldAddComma(index: number): boolean {
-    // Verificar si la respuesta actual es consecutiva a la anterior
-    if (index > 0) {
-      const prevResponseIndex = parseInt(this.respuestasSeleccionadas[index - 1]);
-      if (prevResponseIndex === index - 1) {
-        return true; // Agregar coma si la respuesta actual es consecutiva a la anterior
-      }
-    }
-    return false;
   }
 }

@@ -1,8 +1,8 @@
 <div id="examenGeneral" class=" container-fluid ">
-    @if (!politicaSprivacidad) {
+    @if (!privacyPolicy) {
     <div class=" border-top border-bottom border-primary">
         <p class="text-end m-2">
-            Usuario {{name}} 
+            Usuario {{userName}} id {{userId}}
         </p>
     </div>
     <div class="container">
@@ -35,11 +35,11 @@
     <div class="row mr-2 ml-4">
         <div class="col-12 border-top border-bottom border-primary">
             <p class="text-end m-2">
-                Usuario {{name}}
+                Usuario {{userName}} id {{userId}}
             </p>
         </div>
         <div class="col-3 p-0">
-            <div class="row m-2 border boxIndex ">
+            <div translate="no" class="row m-2 border boxIndex ">
                 @for (questionNumber of questionNumbers; track $index) {
                 <div class="col-3 d-flex">
                     <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios{{$index}}"
@@ -71,34 +71,38 @@
                     <div class="d-flex flex-column">
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
-                                id="exampleRadios1" value="option1"
-                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                                 value="option1"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"
+                                (change)="selectQuestion(selectedQuestionIndex)">
                             <label class="form-check-label" for="exampleRadios1"> A: 
                                 {{questions[selectedQuestionIndex]?.respuesta_texto1}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
-                                id="exampleRadios2" value="option2"
-                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"> 
+                                 value="option2"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"
+                                (change)="selectQuestion(selectedQuestionIndex)"> 
                             <label class="form-check-label" for="exampleRadios2"> B:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto2}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
-                                id="exampleRadios3" value="option3"
-                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                                 value="option3"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"
+                                (change)="selectQuestion(selectedQuestionIndex)">
                             <label class="form-check-label" for="exampleRadios3"> C:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto3}} </label>
                         </div>
                         <div>
                             <input class="form-check-input" type="radio" name="exampleRadios{{selectedQuestionIndex}}"
-                                id="exampleRadios4" value="option4"
-                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]">
+                                 value="option4"
+                                [(ngModel)]="selectedAnswers[selectedQuestionIndex]"
+                                (change)="selectQuestion(selectedQuestionIndex)">
                             <label class="form-check-label" for="exampleRadios4"> D:
                                 {{questions[selectedQuestionIndex]?.respuesta_texto4}} </label>
                         </div>
                         <div class="d-flex justify-content-between mb-1">
-                            <button (click)="borrarRespuesta()">Borrar respuestas</button>
+                            <button (click)="deleteResponse()">Borrar respuestas</button>
                             <button>Ver instrucciones</button>
                         </div>
 
@@ -108,7 +112,7 @@
                     preguntasSinContestar }}</p>
 
                 <div class="respuestas d-flex">
-                    @for (respuesta of respuestasSeleccionadas; track $index) {
+                    @for (respuesta of selectedResponses; track $index) {
                     <span>{{respuesta}}</span>
                     }
                 </div>

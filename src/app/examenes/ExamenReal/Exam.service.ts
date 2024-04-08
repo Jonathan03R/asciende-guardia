@@ -33,7 +33,7 @@ export class ExamenRealService {
    * @param selectedAnswers Un array que contiene las respuestas seleccionadas por el usuario.
    * @returns Un array de cadenas que representan las respuestas seleccionadas en el formato "nLetra", donde 'n' es el número de pregunta y 'Letra' es la letra de la respuesta seleccionada.
    */
-  calcularRespuestasSeleccionadas(selectedAnswers: (string | null)[]): string[] {
+  calculateSelectedResponses(selectedAnswers: (string | null)[]): string[] {
     const respuestasSeleccionadas: string[] = [];
     for (let i = 0; i < selectedAnswers.length; i++) {
       const answer = selectedAnswers[i];

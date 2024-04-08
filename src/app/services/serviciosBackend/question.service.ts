@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { BASE_URL } from '../../app.config';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,14 @@ export class QuestionService {
   }
 
 
-  getGenerateExamen(): Observable<any[]> {
-    return this.http.get<any[]>(`${BASE_URL}/questions/real-exam`)
+  getGenerateExamen(userId: number): Observable<any[]> {
+    return this.http.post<any[]>(`${BASE_URL}/questions/real-exam`, { userId }).pipe(
+      tap(() => console.log('Llamada al servicio de examen exitosa')),
+      catchError(error => {
+        console.error('Error al llamar al servicio de examen:', error);
+        throw error; // Reenviar el error para que sea manejado por el componente que llama al servicio
+      })
+    );
   }
 
   
