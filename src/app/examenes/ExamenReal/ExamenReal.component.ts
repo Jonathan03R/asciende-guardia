@@ -33,6 +33,8 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   public userName: string = ""; // Nombre del usuario
   public userId: number = 0;    // ID del usuario
   privacyPolicy: boolean = false;
+  private timeLeft: number = 7200; // Duración en segundos (2 horas)
+  private destroy$ = new Subject<void>();
 
   // Variable para mostrar el tiempo restante en el examen
   displayTime$: Observable<string> | undefined;
@@ -45,6 +47,8 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   private examenRealService = inject(ExamenRealService);
   private respuestasService = inject(RespuestasService);
 
+
+  /************************************Lifecycle Hooks:********************************************/
   /**
    * Inicializa el componente.
    */
@@ -54,7 +58,6 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     this.orderSelectedResponses();
     this.initializeUserName();
   }
-
   /**
    * Limpia los recursos cuando el componente es destruido.
    */
@@ -63,6 +66,8 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       this.timerSubscription.unsubscribe();
     }
   }
+
+  /**********************Métodos relacionados con la funcionalidad del examen:********************************************/
 
   /**
    * Muestra el examen y activa el temporizador.
@@ -73,10 +78,6 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     this.startTimer();
     console.log("examen mostrado")//depurar
   }
-
-  // Métodos para el temporizador
-  private timeLeft: number = 7200; // Duración en segundos (2 horas)
-  private destroy$ = new Subject<void>();
 
   /**
    * Inicia el temporizador.
@@ -142,10 +143,11 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene las preguntas del examen de la base de datos.
-   */
-
-
+  * @description Método para cargar las preguntas del examen.
+  * Obtiene la información del usuario y solicita al servicio de preguntas la generación del examen correspondiente.
+  * Al recibir los datos del examen, actualiza el ID del examen, las preguntas y los números de pregunta.
+  * También inicializa un array para almacenar los IDs de las preguntas.
+  */
   loadExamQuestions(): void {
     const userInfo = this.userInfoService.getUserInfo();
     this.questionService.getGenerateExamen(userInfo.usuario_id).subscribe(
@@ -156,7 +158,7 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
         this.questionNumbers = this.generateQuestionNumbers(this.questions.length);
 
         // Aquí puedes inicializar un array para almacenar los IDs de las preguntas
-      this.questionIds = this.questions.map((question: any) => question.id);
+        this.questionIds = this.questions.map((question: any) => question.id);
       },
       (error) => {
         console.error('Error al obtener preguntas para el examen:', error);
@@ -177,9 +179,12 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Selecciona una pregunta del examen y actualiza las respuestas seleccionadas.
-   * @param index El índice de la pregunta seleccionada.
-   */
+ * @description Método para seleccionar una pregunta y su respuesta correspondiente.
+ * Actualiza el índice de la pregunta seleccionada y obtiene la respuesta seleccionada para esa pregunta.
+ * Luego, agrega la pregunta seleccionada al array de preguntas seleccionadas.
+ * También imprime mensajes de depuración para verificar la correcta selección y obtención de datos.
+ * @param {number} index - Índice de la pregunta seleccionada.
+ */
   selectQuestion(index: number): void {
     this.selectedQuestionIndex = index;
     let selectedAnswer = this.selectedAnswers[index];
@@ -199,12 +204,14 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     // Agregar la pregunta seleccionada al array
     this.selectedQuestions[index] = selectedQuestion;
 
-    // mensajes para depurar , es decir ver que me retorna y si es correcto
-    // console.log('Índice de pregunta seleccionada:', index);
-    // console.log('Respuestas seleccionadas:', this.selectedAnswers);
-    // console.log('ID de la pregunta seleccionada:', preguntaId);
-    // console.log('Preguntas seleccionadas:', this.selectedAnswerTexts);
-    // console.log('FormatoPara EL backend :', this.selectedQuestions)
+    /** 
+     *  mensajes para depurar , es decir ver que me retorna y si es correcto
+    * console.log('Índice de pregunta seleccionada:', index);
+    * console.log('Respuestas seleccionadas:', this.selectedAnswers);
+    * console.log('ID de la pregunta seleccionada:', preguntaId);
+    * console.log('Preguntas seleccionadas:', this.selectedAnswerTexts);
+    * console.log('FormatoPara EL backend :', this.selectedQuestions)
+    */
     this.selectedResponses = this.examenRealService.calculateSelectedResponses(this.selectedAnswers);
   }
 
@@ -264,6 +271,7 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  /***************************************Métodos de utilidad:********************************************/
 
   /**
    * Obtiene el número de preguntas contestadas.
@@ -287,19 +295,25 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  /**
+ * @description Método para finalizar un examen, enviando las respuestas del usuario al backend.
+ * Una vez obtenidos el ID de usuario y el ID del examen, recorre las preguntas seleccionadas y envía
+ * las respuestas del usuario al servidor.
+ */
 
+  /*******************************Método para finalizar el examen:********************************************/
 
   finalizarExamen(): void {
     // Obtener el ID de usuario y el ID de examen
     const userInfo = this.userInfoService.getUserInfo();
     const usuarioId = userInfo.usuario_id;
     const examenId = this.examenId;
-  
+
     // Enviar las respuestas del usuario al backend
     this.selectedQuestions.forEach(selectedQuestion => {
       const preguntaId = selectedQuestion.preguntaId;
       const respuestaSeleccionada = selectedQuestion.alternativaSeleccionada !== null ? selectedQuestion.alternativaSeleccionada : '';
-  
+
       // Llamar al servicio para enviar la respuesta del usuario al backend
       this.respuestasService.enviarRespuestaUsuario(usuarioId, examenId, preguntaId, respuestaSeleccionada).subscribe(
         (response: any) => {
@@ -313,6 +327,12 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       );
     });
   }
+
+
+
+
+
+
 
 
 }
