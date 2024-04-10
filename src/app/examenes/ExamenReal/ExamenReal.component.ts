@@ -6,6 +6,7 @@ import { UserInfoServiceService } from '../../services/UserInfoService.service';
 import { Observable, Subject, Subscription, map, takeUntil, timer } from 'rxjs';
 import { ExamenRealService } from './Exam.service';
 import { RespuestasService } from '../../services/serviciosBackend/respuestas.service';
+import { SelectedQuestion } from './Exam';
 
 @Component({
   selector: 'app-examen-real',
@@ -22,12 +23,15 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
   // Variables para almacenar datos del examen
   questionNumbers: any[] = [];
   questions: any[] = [];
+  examenId: number = 0;
+  questionIds: number[] = [];
   selectedQuestionIndex: number = 0;
   selectedAnswers: (string | null)[] = [];
-  selectedAnswerTexts: string[ ] = [];
+  selectedAnswerTexts: string[] = [];
   selectedResponses: string[] = [];
-  public userName: number = 0;
-  public userId: string = "";
+  selectedQuestions: SelectedQuestion[] = [];
+  public userName: string = ""; // Nombre del usuario
+  public userId: number = 0;    // ID del usuario
   privacyPolicy: boolean = false;
 
   // Variable para mostrar el tiempo restante en el examen
@@ -64,8 +68,10 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
    * Muestra el examen y activa el temporizador.
    */
   mostrarExamen() {
+
     this.privacyPolicy = true;
     this.startTimer();
+    console.log("examen mostrado")//depurar
   }
 
   // Métodos para el temporizador
@@ -139,13 +145,18 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
    * Obtiene las preguntas del examen de la base de datos.
    */
 
-  
+
   loadExamQuestions(): void {
     const userInfo = this.userInfoService.getUserInfo();
     this.questionService.getGenerateExamen(userInfo.usuario_id).subscribe(
-      (questions: any[]) => {
-        this.questions = questions;
+      (examData: any) => {
+        //recuperacion de datos
+        this.examenId = examData.examenId;
+        this.questions = examData.preguntas;
         this.questionNumbers = this.generateQuestionNumbers(this.questions.length);
+
+        // Aquí puedes inicializar un array para almacenar los IDs de las preguntas
+      this.questionIds = this.questions.map((question: any) => question.id);
       },
       (error) => {
         console.error('Error al obtener preguntas para el examen:', error);
@@ -177,11 +188,23 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
     }
     const answerText = selectedAnswer !== null ? this.getAnswerText(selectedAnswer) : '';
     this.selectedAnswerTexts[index] = answerText;
-  
+
+    const preguntaId = this.questions[index]?.pregunta_id;;
+
+    const selectedQuestion: SelectedQuestion = {
+      preguntaId: preguntaId,
+      alternativaSeleccionada: answerText,
+    };
+
+    // Agregar la pregunta seleccionada al array
+    this.selectedQuestions[index] = selectedQuestion;
+
     // mensajes para depurar , es decir ver que me retorna y si es correcto
-    console.log('Índice de pregunta seleccionada:', index);
-    console.log('Respuestas seleccionadas:', this.selectedAnswers);
-    console.log('Preguntas seleccionadas:', this.selectedAnswerTexts);
+    // console.log('Índice de pregunta seleccionada:', index);
+    // console.log('Respuestas seleccionadas:', this.selectedAnswers);
+    // console.log('ID de la pregunta seleccionada:', preguntaId);
+    // console.log('Preguntas seleccionadas:', this.selectedAnswerTexts);
+    // console.log('FormatoPara EL backend :', this.selectedQuestions)
     this.selectedResponses = this.examenRealService.calculateSelectedResponses(this.selectedAnswers);
   }
 
@@ -263,4 +286,33 @@ export default class ExamenRealComponent implements OnInit, OnDestroy {
       return count;
     }, 0);
   }
+
+
+
+  finalizarExamen(): void {
+    // Obtener el ID de usuario y el ID de examen
+    const userInfo = this.userInfoService.getUserInfo();
+    const usuarioId = userInfo.usuario_id;
+    const examenId = this.examenId;
+  
+    // Enviar las respuestas del usuario al backend
+    this.selectedQuestions.forEach(selectedQuestion => {
+      const preguntaId = selectedQuestion.preguntaId;
+      const respuestaSeleccionada = selectedQuestion.alternativaSeleccionada !== null ? selectedQuestion.alternativaSeleccionada : '';
+  
+      // Llamar al servicio para enviar la respuesta del usuario al backend
+      this.respuestasService.enviarRespuestaUsuario(usuarioId, examenId, preguntaId, respuestaSeleccionada).subscribe(
+        (response: any) => {
+          // Manejar la respuesta del servidor si es necesario
+          console.log('Respuesta del servidor:', response);
+        },
+        (error: any) => {
+          // Manejar el error si ocurre
+          console.error('Error al enviar la respuesta al servidor:', error);
+        }
+      );
+    });
+  }
+
+
 }

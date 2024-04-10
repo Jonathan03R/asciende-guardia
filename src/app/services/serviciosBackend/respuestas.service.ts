@@ -12,7 +12,7 @@ export class RespuestasService {
 
 
   enviarRespuestaUsuario(usuarioId: number, examenId: number, preguntaId: number, respuestaSeleccionada: string): Observable<any> {
-    const endpoint = `${BASE_URL}/respuesta-usuario`;
+    const endpoint = `${BASE_URL}/examen/respuesta-usuario`;
     const body = {
       usuarioId,
       examenId,
