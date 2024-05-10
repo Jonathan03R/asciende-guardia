@@ -26,6 +26,11 @@ export class QuestionService {
     );
   }
 
+
+  checkExamEligibility(userId: number): Observable<any> {
+    return this.http.post<any[]>(`${BASE_URL}/questions/check-exam-eligibility`, { userId }) ;
+  }
+
   
   private examen: boolean = true;
 
